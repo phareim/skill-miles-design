@@ -1,0 +1,413 @@
+/* ==========================================================================
+   Miles Design System — Colors & Type
+   ========================================================================== */
+
+/* ---------- FONT FACES ---------- */
+
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gelica";
+  src: url("fonts/gelica/Gelica-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/dm-sans/DMSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- TOKENS ---------- */
+
+:root {
+  /* ---- Brand palette ---- */
+  --miles-rod:           #ff303b;   /* primary red — logo, CTAs, emphasis */
+  --miles-rod-hover:     #e8252f;   /* darker red for hover */
+  --miles-rod-press:     #c81d26;   /* pressed red */
+  --miles-rod-tint-1:    #ff5f68;
+  --miles-rod-tint-2:    #ff8a90;
+  --miles-rod-tint-3:    #ffb7bb;
+  --miles-rod-tint-4:    #ffdbde;
+
+  --burgunder:           #450d21;   /* primary text, headings */
+  --burgunder-hover:     #360819;
+  --burgunder-tint-1:    #6a2f44;
+  --burgunder-tint-2:    #8f5265;
+  --burgunder-tint-3:    #b58594;
+  --burgunder-tint-4:    #d9bcc4;
+
+  --krem:                #fbf0e5;   /* primary background */
+  --krem-warm:           #fdf6ef;   /* slightly warmer body bg */
+  --krem-deep:           #f3e3d0;   /* deeper cream for subtle surfaces */
+
+  --gul:                 #ffd9a1;   /* warm accent */
+  --gul-deep:            #f3bf76;
+
+  --morkilla:            #3d1436;   /* secondary dark purple — tech/knowledge */
+  --morkilla-tint-1:     #5e2f56;
+  --morkilla-tint-2:     #805076;
+
+  /* ---- Tech accent (sanctioned by the official PowerPoint theme) ----
+     Use ONLY in technical/code contexts (code blocks, dev-tool screenshots,
+     data-viz where you need a second hue, "tech & cloud" service slides).
+     Never in marketing prose, hero blocks, or as a primary accent. */
+  --dark-teal:           #004047;   /* deep teal — code/tech surfaces */
+  --teal:                #78e8db;   /* bright teal — accent ON dark-teal only */
+  --deep-red:            #b72318;   /* deeper red — print/duotone, rarely on screen */
+
+  --white:               #ffffff;
+  --black:               #1a0810;
+
+  /* ---- Semantic foreground ---- */
+  --fg-1: var(--burgunder);        /* primary text */
+  --fg-2: var(--burgunder-tint-1); /* secondary text */
+  --fg-3: var(--burgunder-tint-2); /* tertiary / muted */
+  --fg-accent: var(--miles-rod);   /* red emphasis */
+  --fg-on-dark: var(--krem);       /* text on burgunder / red */
+  --fg-inverse: var(--krem);
+
+  /* ---- Semantic background ---- */
+  --bg-1: var(--krem);             /* primary canvas */
+  --bg-2: var(--krem-warm);        /* raised surface warm */
+  --bg-3: var(--krem-deep);        /* subdued surface */
+  --bg-dark: var(--burgunder);     /* inverse dark surface */
+  --bg-accent: var(--miles-rod);   /* red surface */
+  --bg-warm: var(--gul);           /* yellow accent surface */
+
+  /* ---- Borders ---- */
+  --border-1: rgba(69, 13, 33, 0.14);
+  --border-2: rgba(69, 13, 33, 0.28);
+  --border-strong: var(--burgunder);
+  --border-accent: var(--miles-rod);
+
+  /* ---- Type families ----
+     Gelica is the brand serif. It is proprietary (Monotype/Adobe Fonts) and
+     cannot be embedded in .pptx files — for PowerPoint exports use Manrope
+     as the sanctioned fallback (the official Miles 2026 template ships with
+     Manrope for headings + DM Sans for body). */
+  --font-display: "Gelica", "Manrope", Georgia, "Times New Roman", serif;
+  --font-body:    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-mono:    ui-monospace, "JetBrains Mono", "DM Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Type scale (perfect fourth, 1.333) ---- */
+  --scale--1: 0.75rem;     /* 12px */
+  --scale-0:  1rem;        /* 16px — base */
+  --scale-1:  1.125rem;    /* 18px */
+  --scale-2:  1.333rem;    /* ~21px */
+  --scale-3:  1.777rem;    /* ~28px */
+  --scale-4:  2.369rem;    /* ~38px */
+  --scale-5:  3.157rem;    /* ~50px */
+  --scale-6:  4.209rem;    /* ~67px */
+  --scale-7:  5.61rem;     /* ~90px */
+
+  /* ---- Spacing (4px base) ---- */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* ---- Radii ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;     /* default card max */
+  --radius-photo: 16px;  /* photo cards / portrait tiles */
+  --radius-pill: 300px;  /* website CTA */
+  --radius-nav: 30px;    /* outlined nav pill */
+
+  /* ---- Shadows (restrained — avoid deep shadows per design.md) ---- */
+  --shadow-0: none;
+  --shadow-1: 0 1px 2px rgba(69, 13, 33, 0.08);
+  --shadow-2: 0 4px 12px rgba(69, 13, 33, 0.09);
+  --shadow-soft: 0 10px 30px rgba(69, 13, 33, 0.06);
+
+  /* ---- Motion ---- */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --dur-fast: 150ms;
+  --dur: 220ms;
+  --dur-slow: 300ms;
+
+  /* ---- Layout ---- */
+  --container: 1200px;
+  --gutter: 1.5rem;
+}
+
+/* ---------- DARK MODE ----------
+   Applies to [data-theme="dark"] and, by default, any user with
+   prefers-color-scheme: dark. Brand red stays the hero; surfaces move
+   to deep burgundy/plum; text uses a warmed cream so it reads on brand. */
+
+:root[data-theme="dark"] {
+  /* Brand colours re-tuned for dark surfaces */
+  --miles-rod:           #ff4752;   /* slightly lighter red — pops on dark */
+  --miles-rod-hover:     #ff6670;
+  --miles-rod-press:     #e82e39;
+  --miles-rod-tint-1:    #c92731;
+  --miles-rod-tint-2:    #8f1c24;
+  --miles-rod-tint-3:    #5a1419;
+  --miles-rod-tint-4:    #3a0e12;
+
+  /* Surfaces — near-black burgundy stack */
+  --natt:                #1a0810;   /* app canvas — deepest */
+  --dyp-burgunder:       #2a1019;   /* raised surface */
+  --dyp-burgunder-2:     #381824;   /* higher raised surface */
+
+  --burgunder:           #f0c9d2;   /* inverted role: text/hi-contrast on dark */
+  --burgunder-hover:     #ffd9e0;
+  --burgunder-tint-1:    #c89aa6;
+  --burgunder-tint-2:    #9c6e7c;
+  --burgunder-tint-3:    #6f4855;
+  --burgunder-tint-4:    #4a2e39;
+
+  --krem:                #ead6c2;   /* warm cream-fg (slightly muted) */
+  --krem-warm:           #f2e1cf;
+  --krem-deep:           #3a2118;   /* deep cream-toned surface for dark UI */
+
+  --gul:                 #e8b778;   /* toned-down yellow for dark bg */
+  --gul-deep:            #c99458;
+
+  --morkilla:            #2a0e25;   /* deep plum — tech/knowledge surface */
+  --morkilla-tint-1:     #4a2545;
+  --morkilla-tint-2:     #6b4466;
+
+  /* Tech accent — already dark-ready; nudge teal up so it pops on near-black */
+  --dark-teal:           #00343a;
+  --teal:                #8df0e3;
+  --deep-red:            #d12e22;
+
+  --white:               #fbf0e5;   /* "white" on dark = cream */
+  --black:               #0d0408;
+
+  /* Semantic foreground — now on dark */
+  --fg-1: var(--krem);             /* primary text */
+  --fg-2: #b89b82;                 /* secondary text */
+  --fg-3: #8a7461;                 /* tertiary / muted */
+  --fg-accent: var(--miles-rod);
+  --fg-on-dark: var(--krem);
+  --fg-inverse: var(--natt);
+
+  /* Semantic background */
+  --bg-1: var(--natt);             /* primary canvas */
+  --bg-2: var(--dyp-burgunder);    /* raised surface */
+  --bg-3: var(--dyp-burgunder-2);  /* higher raised surface */
+  --bg-dark: #000000;              /* deepest well */
+  --bg-accent: var(--miles-rod);
+  --bg-warm: var(--gul);
+
+  /* Borders — cream alpha, low */
+  --border-1: rgba(234, 214, 194, 0.08);
+  --border-2: rgba(234, 214, 194, 0.16);
+  --border-strong: var(--krem);
+  --border-accent: var(--miles-rod);
+
+  /* Shadows — heavier on dark to still read */
+  --shadow-0: none;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* Honour system preference unless a parent has already forced a theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+/* ---------- SEMANTIC ELEMENTS ---------- */
+
+html, body {
+  background: var(--bg-1);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings use Gelica (Medium 500 — brand standard for headings) */
+.h-display, .h1, .h2, .h3, .h4, .h5, h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  color: var(--fg-1);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.h-display { font-size: var(--scale-7); line-height: 0.98; letter-spacing: -0.02em; }
+h1, .h1    { font-size: var(--scale-5); }   /* ~50px — hero / section */
+h2, .h2    { font-size: var(--scale-4); }   /* ~38px */
+h3, .h3    { font-size: var(--scale-3); line-height: 1.15; }
+h4, .h4    { font-size: var(--scale-2); line-height: 1.2; font-weight: 600; }
+h5, .h5    { font-size: var(--scale-1); line-height: 1.3; font-weight: 600; }
+
+/* Kicker / eyebrow — Gelica italic or DM Sans caps, Miles-rød */
+.kicker {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--fg-accent);
+  font-size: var(--scale-2);
+  line-height: 1.2;
+  margin: 0 0 var(--space-3);
+}
+
+.kicker-sans {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--fg-accent);
+  font-size: var(--scale--1);
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-3);
+}
+
+/* Body text */
+p, .body {
+  font-family: var(--font-body);
+  font-size: var(--scale-1);
+  line-height: 1.55;
+  color: var(--fg-1);
+  text-wrap: pretty;
+  margin: 0 0 var(--space-4);
+}
+
+.ingress {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--scale-3);
+  line-height: 1.3;
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+
+.caption, small {
+  font-family: var(--font-body);
+  font-size: var(--scale--1);
+  line-height: 1.4;
+  color: var(--fg-2);
+}
+
+.quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--scale-4);
+  line-height: 1.2;
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+
+/* Emphasis (single red word inside heading) */
+.em-red { color: var(--fg-accent); }
+
+/* Links */
+a { color: var(--fg-accent); text-decoration: none; }
+a:hover { color: var(--miles-rod-hover); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Code (rarely used on brand — sans mono fallback) */
+code, kbd, pre, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--bg-3);
+  color: var(--burgunder);
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+}

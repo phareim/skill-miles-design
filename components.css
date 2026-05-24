@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Miles Design System — Component recipes
+   Companion to colors_and_type.css. These are the brand's signature
+   components, ready to port. Translate to the host's styling system as
+   needed. All values reference custom properties from colors_and_type.css.
+   ========================================================================== */
+
+/* ---------- 1. Hand-drawn outlined frame ----------
+   THE brand-signature card pattern. Used for brochure cards, slide-template
+   tiles, phone mockup containers, document/letterhead frames, mini-preview
+   tiles. The "hand-drawn" variant adds slight rotation + asymmetric radii
+   to read as drawn rather than computed. */
+
+.miles-frame {
+  background: var(--bg-1);
+  border: 1.5px solid var(--burgunder);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: none;
+}
+
+.miles-frame--photo {
+  border-radius: var(--radius-photo);
+  padding: 0;
+  overflow: hidden;
+}
+
+.miles-frame--hand-drawn {
+  /* Slightly imperfect borders and a hair of rotation to read as "drawn".
+     Tune per use: more wobble for editorial, none for product UI. */
+  border-radius: 16px 18px 14px 17px;
+  transform: rotate(-0.4deg);
+}
+
+.miles-frame--hand-drawn:nth-of-type(even) {
+  border-radius: 17px 15px 18px 14px;
+  transform: rotate(0.5deg);
+}
+
+/* Header strip inside a frame (kicker top-left, year/logo top-right) */
+.miles-frame__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--scale--1);
+  color: var(--fg-1);
+  letter-spacing: 0;
+  margin-bottom: var(--space-7);
+}
+
+.miles-frame__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-7);
+  font-family: var(--font-body);
+  font-size: var(--scale--1);
+  color: var(--fg-2);
+}
+
+
+/* ---------- 2. CTA pills ----------
+   Three flavours: filled red (web primary), outlined burgundy (nav),
+   inverse cream-on-red (closing slide / red-flood A-format). All are
+   pill-shaped (300px or 30px). */
+
+.miles-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--scale-0);
+  line-height: 1;
+  padding: 0.95rem 1.75rem;
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out-quart),
+              color var(--dur) var(--ease-out-quart),
+              border-color var(--dur) var(--ease-out-quart);
+}
+
+.miles-cta--primary {
+  background: var(--miles-rod);
+  color: var(--krem);
+}
+.miles-cta--primary:hover { background: var(--miles-rod-hover); }
+.miles-cta--primary:active { background: var(--miles-rod-press); }
+
+.miles-cta--outlined {
+  background: transparent;
+  color: var(--burgunder);
+  border-color: var(--burgunder);
+  border-radius: var(--radius-nav);
+  padding: 0.6rem 1.25rem;
+}
+.miles-cta--outlined:hover {
+  background: var(--burgunder);
+  color: var(--krem);
+}
+
+.miles-cta--inverse {
+  /* Cream pill on a red surface — closing slides, red-flood CTAs */
+  background: var(--krem);
+  color: var(--burgunder);
+}
+.miles-cta--inverse:hover { background: #f5e4d2; }
+.miles-cta--inverse .miles-cta__arrow {
+  /* The arrow inside an inverse pill is red */
+  color: var(--miles-rod);
+}
+
+.miles-cta:focus-visible {
+  outline: 2px solid var(--miles-rod);
+  outline-offset: 2px;
+}
+
+
+/* ---------- 3. Outlined pill nav chip ----------
+   Used inside TOC cards and as small nav pills. 30px radius, no fill. */
+
+.miles-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--scale-0);
+  color: var(--burgunder);
+  background: transparent;
+  border: 1.5px solid var(--burgunder);
+  border-radius: var(--radius-nav);
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out-quart),
+              color var(--dur) var(--ease-out-quart);
+}
+.miles-pill:hover { background: var(--burgunder); color: var(--krem); }
+
+.miles-pill--filled {
+  background: var(--burgunder);
+  color: var(--krem);
+}
+.miles-pill--filled:hover { background: var(--burgunder-hover); }
+
+
+/* ---------- 4. TOC card (pill-card grouping) ----------
+   The brand-guide table-of-contents pattern: a cream card with a thin
+   burgundy border, a filled burgundy section-title pill, and a vertical
+   stack of outlined nav-pills inside. */
+
+.miles-toc-card {
+  background: var(--bg-1);
+  border: 1.5px solid var(--burgunder);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.miles-toc-card__title {
+  /* The filled burgundy pill at the top of each TOC group */
+  align-self: flex-start;
+  background: var(--burgunder);
+  color: var(--krem);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--scale-0);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-nav);
+}
+
+.miles-toc-card__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+
+/* ---------- 5. Phone mockup outline ----------
+   Hand-drawn burgundy outline of a phone, used to carry SoMe/digital
+   content in marketing slides. No screen chrome — the content is the
+   point; the outline is decorative. */
+
+.miles-phone {
+  position: relative;
+  width: 260px;
+  aspect-ratio: 9 / 19;
+  border: 2px solid var(--burgunder);
+  border-radius: 32px;
+  background: var(--bg-1);
+  padding: 36px 14px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+/* Speaker / notch hint at top */
+.miles-phone::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--burgunder);
+}
+.miles-phone__screen {
+  flex: 1;
+  border: 1.5px solid var(--burgunder);
+  border-radius: 8px;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ---------- 6. Speech bubble ----------
+   Hand-drawn outlined bubble with a tail. Used for editorial humour and
+   to soften technical content. Often paired with a tiny "Err, okay?"
+   bubble in the opposite corner. */
+
+.miles-bubble {
+  position: relative;
+  display: inline-block;
+  background: var(--bg-1);
+  border: 1.5px solid var(--burgunder);
+  border-radius: 18px;
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--fg-accent);
+  max-width: 28ch;
+  line-height: 1.25;
+}
+.miles-bubble::after {
+  /* Bottom-left tail */
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  left: 28px;
+  width: 0;
+  height: 0;
+  border-top: 14px solid var(--burgunder);
+  border-right: 12px solid transparent;
+}
+.miles-bubble::before {
+  /* Mask the tail's interior with cream to fake a stroke-only triangle */
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border-top: 11px solid var(--bg-1);
+  border-right: 9px solid transparent;
+  z-index: 1;
+}
+
+
+/* ---------- 7. "Tips & tricks!" sticker ----------
+   Dashed red rectangle with the words "Tips & tricks!" cut into the top
+   stroke. Used in the PPTX template for instructional callouts. */
+
+.miles-tips {
+  position: relative;
+  border: 2px dashed var(--miles-rod);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-size: var(--scale-0);
+  color: var(--fg-1);
+  line-height: 1.5;
+}
+.miles-tips::before {
+  content: "Tips & tricks!";
+  position: absolute;
+  top: -0.75em;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-1);
+  padding: 0 0.6em;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--miles-rod);
+  font-size: var(--scale-0);
+}
+
+
+/* ---------- 8. Service-area circle ----------
+   The official service-area marks come in regular + circle variants
+   (assets/service-icons/). When you need to compose them inline, use
+   this container — a burgundy-outlined circle with the line-icon inside. */
+
+.miles-service-circle {
+  width: 96px;
+  height: 96px;
+  border: 1.5px solid var(--burgunder);
+  border-radius: 50%;
+  background: var(--bg-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.miles-service-circle img,
+.miles-service-circle svg {
+  width: 56%;
+  height: 56%;
+  object-fit: contain;
+}
+
+
+/* ---------- 9. Kicker (eyebrow) ----------
+   See colors_and_type.css for .kicker (Gelica italic, red) and
+   .kicker-sans (DM Sans caps, tracked, red). Adding helpers here for
+   the kicker-as-section-anchor pattern: a kicker followed by a Gelica
+   heading is the canonical Miles page opener. */
+
+.miles-section-opener {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+.miles-section-opener .kicker { margin: 0; }
+.miles-section-opener h1,
+.miles-section-opener h2 { margin: 0; }
+
+
+/* ---------- 10. Red split panel ----------
+   Two-half layout: left red flood with cream text, right cream with
+   burgundy text. The brand-guide's "A lot is new : A lot remains" pattern. */
+
+.miles-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+.miles-split > .red {
+  background: var(--miles-rod);
+  color: var(--krem);
+  padding: var(--space-8);
+}
+.miles-split > .red .em-red { color: var(--krem); }
+.miles-split > .cream {
+  background: var(--krem);
+  color: var(--burgunder);
+  padding: var(--space-8);
+}
+
+
+/* ---------- 11. Vision-statement box ----------
+   The "Our vision is ambitious" pattern: a 2px Miles-rød outlined box
+   wrapping a paragraph in burgundy DM Sans, with a small red arrow
+   pointing at it from outside. */
+
+.miles-vision {
+  border: 2px solid var(--miles-rod);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--scale-1);
+  line-height: 1.55;
+  color: var(--fg-1);
+  background: transparent;
+}
+
+
+/* ---------- 12. Photo card / portrait tile ----------
+   Slightly more generous radius than the default card — applies to
+   contact-card portraits (black-and-white photo + name + role beneath)
+   and to in-slide photo cards. */
+
+.miles-photo-card {
+  background: var(--bg-1);
+  border-radius: var(--radius-photo);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.miles-photo-card > img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.miles-photo-card__meta {
+  text-align: center;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  font-family: var(--font-body);
+}
+.miles-photo-card__name {
+  font-weight: 600;
+  color: var(--fg-1);
+}
+.miles-photo-card__role {
+  font-size: var(--scale--1);
+  color: var(--fg-2);
+  margin-top: var(--space-1);
+}
+
+
+/* ---------- 13. Page chrome (header strip) ----------
+   The brand-guide / slide header: hamburger top-left, optional centred
+   metadata, Miles wordmark top-right. */
+
+.miles-page-header {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  padding: var(--space-5) var(--space-7);
+  gap: var(--space-5);
+}
+.miles-page-header__menu {
+  /* Three burgundy lines */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.miles-page-header__menu span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--burgunder);
+  border-radius: 2px;
+}
+.miles-page-header__meta {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-7);
+  font-family: var(--font-body);
+  font-size: var(--scale--1);
+  color: var(--fg-1);
+}
+.miles-page-header__logo {
+  height: 22px;
+  width: auto;
+}
+
+
+/* ---------- 14. Annotation arrow ----------
+   The "Hover over the illustration to see the idea behind it!" pattern:
+   a small red curved-arrow SVG paired with a cursive-style annotation
+   note. Implement the arrow as an SVG; this gives the type spec. */
+
+.miles-annotation {
+  font-family: var(--font-body);
+  font-size: var(--scale--1);
+  color: var(--fg-1);
+  font-style: italic;
+  line-height: 1.35;
+  max-width: 22ch;
+}
