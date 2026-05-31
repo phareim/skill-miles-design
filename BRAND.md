@@ -260,7 +260,7 @@ Five marks, each in regular and circle variants. The Norwegian names are canonic
 Use the **circle** variant on cream backgrounds; the **non-circle** variant inside an existing container or grid cell.
 
 ### 3.3 Decorative group illustrations (`assets/illustrations/`)
-`group-*.svg` — larger scene illustrations. Treat as **hero imagery**, not icons. PNG versions exist for raster targets.
+Larger scene illustrations (semantically named — `tangled-cables`, `lightbulb-idea`, `catching-ideas-net`, `handshake`, the `person-at-laptop*` desk scenes, etc.). Treat as **hero imagery**, not icons. Most ship `.svg` + `.png`. Full captioned list in [`ASSETS.md`](ASSETS.md).
 
 ### 3.4 UI micro-icons (functional)
 The brand does **not** ship a functional UI icon set beyond hamburger, delete arrows, and the small inline arrow-pills. For general UI work:

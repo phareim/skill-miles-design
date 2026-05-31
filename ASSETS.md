@@ -69,40 +69,48 @@ Red on cream is default; cream/white on red/burgundy/photos; burgundy on yellow.
 
 ## Illustrations (`assets/illustrations/`)
 
-Two families. **Named JPG/PNG** are finished single-message pieces; **`group-*`**
-are the source scenes (most ship as both `.svg` vector and `.png` raster —
-prefer the `.svg` for web; use `.png` where vector isn't supported).
+Same warm vignette throughout: burgundy ink, cream/white fills, a Miles-rød
+accent, soft cream ellipse ground. Most ship as both `.svg` (prefer for web) and
+`.png` (raster fallback); a few are single-format (noted below). Names are
+semantic — captioned from the actual art.
 
-### Finished "people holding a sign" pieces (reusable as-is)
+### "Holding a sign" pieces — a single red phrase on a speech-bubble sign
 
-All use the same warm vignette: one-to-three people holding a large speech-bubble
-sign with a single red phrase. Great for empty states, onboarding, section
-intros, and friendly status moments.
+Great for empty states, onboarding, section intros, and friendly status moments.
 
-| File | Sign reads | Use for |
+| File(s) | Reads / shows | Use for |
 |---|---|---|
 | `velkommen.jpg` | "Velkommen" | welcome / onboarding (2 people, on cream) |
 | `lykke-til.jpg` | "Lykke til videre" | good-luck / sign-off (2 people, on cream) |
 | `vi-gleder-oss.jpg` | "Vi gleder oss!" | anticipation / "looking forward to it" (2 people, on cream) |
 | `not-ready.jpg` | "Dette området er ikke klart!" | **placeholder / unfinished-area** state (2 people, on cream) |
-| `people-hei.png` | "Hei!" | hero greeting (3 people, **transparent bg** — drops onto any cream surface) |
+| `people-hei.png` | "Hei!" | hero greeting (3 people, **transparent** — png only) |
+| `oisann.{svg,png}` | "Oisann.." (oops) | inline error / "whoops" reaction (1 person, transparent) |
+| `two-people-sign-blank.{svg,png}` | blank sign | **drop-your-own-text template** (2 people, transparent) |
+| `two-people-sign-red.svg` | red sign | bold greeting sign (2 people, svg only) |
 
-### `group-*` scenes
+### Desk / laptop scenes
 
-- **`group-1`…`group-7`** (`.svg` + `.png`, plus `group.svg`) — simple single-figure
-  "person holding a sign" vignettes with short red interjections, e.g.
-  `group-1` = *"Oisann.."* (oops). Transparent. Use for inline reactions / error
-  and empty states. **Preview before placing** — the sign word differs per file.
-- **`group-633755`, `-633756`, `-633786`, `-633824`, `-634118`, `-634119`,
-  `-634123`, `-634124`** (Figma export IDs) — richer narrative desk scenes inside
-  a **cream blob**, often pairing a "confusion" scribble bubble with a red
-  confidence line, e.g. `group-633755` = a person at a laptop with a tangled-
-  scribble bubble and *"Jeg forstår. Dette kan vi!"* (I understand — we can do
-  this!). Treat as **hero imagery**, not icons. **Preview before placing.**
+| File(s) | Shows | Use for |
+|---|---|---|
+| `person-at-laptop.{svg,png}` | bespectacled person, plain dark laptop | neutral "at work" / focus |
+| `person-at-laptop-plant-coffee.{svg,png}` | same + plant + coffee | cosy "deep work" desk |
+| `person-at-laptop-red.{svg,png}` | person, red laptop, content | "building / shipping" beat |
+| `person-at-laptop-red-coffee.{svg,png}` | red laptop + coffee | relaxed "working away" |
+| `desk-jeg-forstaar.{svg,png}` | desk + confusion-scribble bubble → red *"Jeg forstår. Dette kan jeg!"* | problem → confidence (transparent) |
+| `desk-jeg-forstaar-blob.{svg,png}` | the above inside a **cream blob**, *"…Dette kan vi!"* (we) | hero version of the same beat |
 
-> **Pairing gaps:** `group.svg` has no PNG; `group-633786.png` and `people-hei.png`
-> are PNG-only. Don't assume every illustration has both formats.
->
-> **Follow-up:** the `group-63xxxx` filenames are raw Figma IDs — renaming them to
-> semantic names (e.g. `desk-jeg-forstaar.svg`) would make this set far easier to
-> use. Left as-is for now to avoid breaking any external references.
+### Concept scenes (hero imagery — not icons)
+
+| File(s) | Shows | Use for |
+|---|---|---|
+| `lightbulb-idea.{svg,png}` | person reclining on a glowing lightbulb, checkmark bubble | ideas / insight / "we've got it" |
+| `catching-ideas-net.{svg,png}` | person running with a butterfly net chasing clouds (one red) | chasing / catching ideas, ambition |
+| `tangled-cables.png` | two faces around a huge tangle of cables & plugs | the messy problem we untangle (png only) |
+| `person-laptop-orbit.{svg,png}` | person with red laptop ringed by capability icons (cloud, chip, checklist, user) | "everything we do" / full-stack capability |
+| `handshake.{svg,png}` | two people shaking hands | agreement / partnership |
+| `handshake-meeting-room.{svg,png}` | handshake in a meeting room (chairs, lamp) | client meeting / hire / close |
+| `kitchen-coffee-break.{svg,png}` | two colleagues by an office kitchen counter | culture / lounge / "bli kjent" |
+
+> **Format gaps:** `people-hei.png`, `tangled-cables.png` are PNG-only;
+> `two-people-sign-red.svg` is SVG-only. Don't assume every piece has both.
