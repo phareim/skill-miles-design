@@ -12,7 +12,7 @@ You are implementing UI for **Miles**, a Norwegian/Lithuanian IT consultancy (~3
 
 1. **Read `BRAND.md`** before producing any Miles-branded UI. It is the full content + visual system, reconciled with the official *Brand Guide 2025* PDF and the *Miles template 2026.pptx*. The rules are opinionated and the brand has explicit anti-patterns.
 2. **Copy `colors_and_type.css` into the host codebase** — or port its custom properties into the host's token system. It is the source of truth for colours (light + dark), type, scale, spacing, radii, shadows, and motion.
-3. **Use `components.css`** for ready-to-port recipes of the brand's signature components — the hand-drawn outlined frame, primary / inverse pill CTAs, phone mockup, speech bubble, TOC pill-card, service-area circle, "Tips & tricks" sticker. Translate them into the host's styling system as needed.
+3. **Use `components.css`** for ready-to-port recipes of the brand's signature components — the hand-drawn outlined frame, primary / inverse pill CTAs, phone mockup, speech bubble, TOC pill-card, service-area circle, "Tips & tricks" sticker, and the three-variant cover slide (`.miles-cover` / `--red` / `--dark`). Translate them into the host's styling system as needed.
 4. **For slide decks, read `presentation-patterns.md`** — it captures the layout recipes from the official 2026 PowerPoint template (covers, chapter pages, service-area intros, team CVs, photo collages, closings). **`examples/slides/` instantiates these** as a ready-to-copy `deck.html` and a real `miles-templates.pptx` (Manrope + DM Sans, embedded assets). The official `Miles template 2026.pptx` remains the source of truth; the bundled `.pptx` is a system demo/starter, not a replacement.
 5. **Copy the fonts** in `fonts/` into the host repo (typically `public/fonts/`). Keep the `@font-face` paths in sync. Gelica is proprietary — bundle the files, never link a CDN. For PPTX exports, **Manrope** is the sanctioned heading fallback (Gelica's EULA forbids `.pptx` embedding); that is the combination shipped in the official 2026 template. Manrope is **not bundled** here (it's OFL/open — fetch from Google Fonts when you need a `.pptx`; see `fonts/manrope/README.md`). On web, headings use the `--font-display` stack (Gelica → serif), which deliberately excludes Manrope.
 6. **Copy any brand assets you reference** from `assets/` into the host repo. Do not link to this skill folder at runtime.
@@ -31,6 +31,7 @@ If asked to design something with no other guidance, ask the user **what** they 
 | `examples/slides/`         | Slide-template set — `deck.html` (HTML, 16:9, arrow-key nav) + `miles-templates.pptx` (+ its generator), one per pattern in `presentation-patterns.md`; plus `charts.html`, the seven Tufte chart types re-themed to Miles |
 | `colors_and_type.css`      | CSS custom properties + `@font-face` + semantic element styles. Light + dark mode.     |
 | `components.css`           | Ready-to-port recipes for Miles' signature components                                  |
+| `slide_overrides.css`      | Brand layer for the `react-presentations` rig — Title (wordmark-led cover, 3 variants), Closing (burgundy flood + corner wordmark), Bullets, BigStat, Graph, Timeline, Section, Quote. Load AFTER components.css. |
 | `presentation-patterns.md` | Slide-deck layout patterns from the official 2026 PowerPoint template                  |
 | `fonts/gelica/`            | Gelica (display serif) — 8 weights/styles, `.ttf`                                      |
 | `fonts/dm-sans/`           | DM Sans (body sans) — 6 weights/styles, `.ttf`                                         |
@@ -66,6 +67,19 @@ If asked to design something with no other guidance, ask the user **what** they 
 - **Web/print:** Gelica → Georgia / Times New Roman. DM Sans → Arial / Helvetica.
 - **PPTX exports:** Gelica → **Manrope** (Bold/SemiBold). This is the official 2026 template's choice; Gelica's licence forbids `.pptx` embedding. Manrope is NOT interchangeable with Gelica on web/print — it is a sans, Gelica is a serif. Not bundled (OFL; fetch from Google Fonts — see `fonts/manrope/`). In CSS, use the `--font-display-pptx` token only for PowerPoint-mirror surfaces; the default web `--font-display` excludes Manrope and falls back serif → serif.
 - **Google Fonts equivalents** (*Fraunces*, *Noto Serif* for Gelica): a compromise, not a match. Flag any substitution to the user.
+
+## React-presentations integration
+
+For HTML slide decks built on the `react-presentations` rig, Miles ships a `slide_overrides.css` that specialises the generic component library for the brand. The rig's themes registry (`~/.claude/skills/react-presentations/themes.json`) already includes the Miles vendor recipe; new decks pick it up automatically.
+
+Key brand pieces enforced by the override layer:
+
+- **Wordmark-led cover** — `<Title>` renders the canonical "Title 1" layout (modest top-left kicker, top-right red meta, giant red Miles wordmark dominating the lower-left two-thirds). Three variants via className: default `Light` (cream), `is-red` (red flood), `is-dark` (burgundy flood). See `presentation-patterns.md` §1 for the geometry rationale.
+- **Closing** — burgundy flood with cream Gelica headline and a small cream Miles wordmark top-left, mirroring the cover. Bleed reaches the window edges via the rig's `data-bleed="ink"` mechanism.
+- **One accent per slide** — Bullets `—` markers, BigStat numeral, Graph line, Timeline dots and Quote glyph all use Miles-rød, but each slide places only one of them so the focal element keeps the single accent. Bullets in cream/dark slides invert appropriately.
+- **Type** — Gelica for hero (Title, Section, Closing, BigStat numeral, content-slide headings), DM Sans for body and meta.
+
+When porting Miles to a new surface, the React-presentations rig's `SKILL.md` "Theme tokens vs. component overrides" section is the canonical model — tokens via `colors_and_type.css`, slide layouts via `slide_overrides.css`.
 
 ## When in doubt
 

@@ -12,27 +12,57 @@ Aspect ratio everywhere: **16:9**. Margin grid: ~6.5% of slide width on left/rig
 
 ## 1. Cover slides (three variants)
 
-The official template ships **three editable cover variants** plus locked "spice-up" intros. The dominant pattern is the giant Gelica/Manrope wordmark with kickers in the corners.
+The official template ships **three editable cover variants** (`Title 1 (Light)` / `Title 2 (Red)` / `Title 3 (Dark)`) plus a locked illustration cover. They share one geometry and differ only in colour swap.
 
-### 1.1 Cream cover
-- **Background:** krem `#fbf0e5`.
-- **Top strip (small DM Sans labels, burgundy, ~14pt):**
-  - Top-left: presentation title (e.g. *"Her kan du skrive tittel på presentasjon — Kundenavn/undertittel"*).
-  - Top-right: speaker name / city, on the next line the date. Miles-rød on cream.
-- **Centre/lower-left:** giant Miles wordmark in Miles-rød, height ~45–55% of slide.
-- **No illustration.** This is the institutional opener.
+> **The key insight:** these covers are *wordmark-led, not title-led*. The presentation title is a small kicker in the upper-left; the brand identity — a giant Miles wordmark dominating the lower half — IS the slide. Resist the urge to make the title huge and centred. That fights the brand.
 
-### 1.2 Red flood cover
-Same layout but `--miles-rod` background, cream Miles wordmark, cream tiny top labels. The Miles logo is in cream Gelica weight (different from the red-on-cream lockup).
+### Shared geometry (measured from the 13.33" × 7.5" / 16:9 template)
 
-### 1.3 Burgundy flood cover
-Same layout but `--burgunder` background, cream Miles wordmark, cream labels. Heaviest / most formal.
+Express positions in percent so they translate to any canvas size.
+
+| Element | Top-left (x,y) | Size (w × h) | Notes |
+|---|---|---|---|
+| Title text | 3%, 6.8% | 52% × 22% | Top-anchored, **left-aligned**, modest 25pt (auto-shrinks if long). Two-line default: `Title of presentation` / `Customer name/subtitle`. |
+| Location / Date | 63.8%, 6.6% | 33.2% × 22% | Top-anchored, **right-aligned**, 25pt. Two lines: location on top, date below. Right margin ~3%. |
+| Miles wordmark | 3%, 58.8% | 64.3% × 35.4% | Left-aligned, fills the lower-left two-thirds. The bottom-right ~33% stays empty — that asymmetric breathing room is the composition's signature. No illustration, no caption. |
+
+Margins: ~3% on left/right, ~7% on top, ~6% on bottom. Tighter than the 6.5%/6% used elsewhere in the deck — the cover *uses* its edges.
+
+### Colour variants
+
+| Variant | Background | Title text | Location/Date | Wordmark |
+|---|---|---|---|---|
+| **1.1 Title 1 (Light)** — cream cover | `--krem` `#FBF0E5` | `--burgunder` `#450D20` | `--miles-rod` `#FF303B` | red on cream |
+| **1.2 Title 2 (Red)** — red flood | `--miles-rod` `#FF303B` (95% opacity in template) | `--krem` | `--krem` | cream on red |
+| **1.3 Title 3 (Dark)** — burgundy flood | `--burgunder` `#450D20` | `--krem` | `--krem` | cream on burgundy |
+
+Choose variant by formality: cream for everyday, red for marketing/launch energy, burgundy for the most formal/institutional decks.
+
+### Type
+
+The PPTX falls back to Arial (Gelica's EULA blocks `.pptx` embedding). For non-PPTX surfaces (web, Figma, Keynote with installed fonts), use **Gelica** for the title and **DM Sans** for location/date — that's the intended pairing. Both stay at modest sizes (~25pt scaled to slide). Don't oversize.
+
+### What is *not* on this slide
+
+Things the React/HTML port commonly adds that the official cover does *not* have:
+
+- ❌ A red accent bar across the top edge
+- ❌ A centred title that fills the middle vertically
+- ❌ A subtitle directly under the title (the "subtitle" is the second line of the title block — same colour, same size, same alignment)
+- ❌ A horizontal rule above the speaker name
+- ❌ The wordmark in a small corner — it's BIG, lower-left, and dominates
+
+If your implementation has any of these, it's not the Miles cover; it's a generic editorial cover with Miles colours.
 
 ### 1.4 Locked "Vi elsker å løse utfordringer!" cover (illustration cover)
 - Background: cream.
 - Top-right: Miles wordmark (small, red).
 - Title in burgundy Gelica, ~3 lines, ~54pt: *"Vi elsker å løse utfordringer!"* / *"We love solving challenges!"*
 - Right ~45%: one of the included illustrations (a person with a net catching ideas, or the tangled-cables vignette). Floats on cream.
+
+### Porting to CSS / React
+
+The recipe is in `components.css` as `.miles-cover` (cream variant) with modifiers `.miles-cover--red` and `.miles-cover--dark`. It's a CSS grid that pins each element to its measured percentage. The wordmark goes in as an `<img>` from `assets/logo/miles-wordmark.svg` (or whichever logo file the host has vendored).
 
 ---
 

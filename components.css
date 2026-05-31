@@ -481,3 +481,71 @@
   line-height: 1.35;
   max-width: 22ch;
 }
+
+
+/* ---------- 15. Cover slide (Title 1/2/3) ----------
+   Port of the three official PPTX cover layouts: cream (default),
+   red (--red modifier), and burgundy (--dark modifier). Positions are
+   taken directly from the Miles template 2026 XML and expressed in
+   percent so the cover scales to any 16:9 canvas (slide, hero section,
+   social card). See presentation-patterns.md §1 for the rationale.
+
+   Required markup:
+     <section class="miles-cover">
+       <div class="miles-cover__title">Title of presentation<br>Customer / subtitle</div>
+       <div class="miles-cover__meta">Oslo<br>May 2026</div>
+       <img class="miles-cover__wordmark" src="…/miles-wordmark.svg" alt="Miles">
+     </section>
+
+   Wordmark colour: swap the SVG file (red vs cream) when changing variant.
+   Do NOT recolour via CSS filter — the brand wordmark must use the exact
+   colour token, not a filtered approximation. */
+
+.miles-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--krem, #FBF0E5);
+  color: var(--burgunder, #450D20);
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  overflow: hidden;
+}
+
+.miles-cover--red  { background: var(--miles-rod, #FF303B); color: var(--krem, #FBF0E5); }
+.miles-cover--dark { background: var(--burgunder, #450D20); color: var(--krem, #FBF0E5); }
+
+.miles-cover__title {
+  position: absolute;
+  left: 3%; top: 6.8%;
+  width: 52%; height: 22%;
+  font-size: clamp(18px, 2.6vw, 36px); /* ≈25pt on a 1280px-wide canvas */
+  line-height: 1.15;
+  text-align: left;
+  color: inherit;
+  /* The second line (after <br>) is the "subtitle" — same size, same
+     colour, same alignment. Don't restyle it; the brand treats title +
+     subtitle as one typographic block. */
+}
+
+.miles-cover__meta {
+  position: absolute;
+  left: 63.8%; top: 6.6%;
+  width: 33.2%; height: 22%;
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  font-size: clamp(14px, 1.9vw, 26px);
+  line-height: 1.2;
+  text-align: right;
+  color: var(--miles-rod, #FF303B);
+}
+.miles-cover--red  .miles-cover__meta,
+.miles-cover--dark .miles-cover__meta { color: var(--krem, #FBF0E5); }
+
+.miles-cover__wordmark {
+  position: absolute;
+  left: 3%; top: 58.8%;
+  width: 64.3%; height: 35.4%;
+  object-fit: contain;
+  object-position: left center;
+  /* The empty lower-right ~33% is intentional breathing room — do not
+     fill it with a tagline, illustration, or social handles. */
+}

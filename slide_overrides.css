@@ -1,0 +1,252 @@
+/* ─── Miles slide overrides ─────────────────────────────────────────────
+   Brand-specific overrides for the react-presentations component library.
+   Loads AFTER the generic components.css to specialize Title / Section /
+   Closing / Bullets / BigStat / Graph / Timeline / Compare for Miles.
+
+   Requires the Miles colour tokens (--ink=burgundy, --accent=Miles-red,
+   --paper=cream, --rule, --mute) to be set on :root via theme.ts cssImports
+   of colors_and_type.css (vendored as /theme/miles.css).
+
+   Requires these assets vendored to /theme/assets/ from miles-design/assets/logos/:
+     - miles-logo-red.png      (red wordmark on cream — Light cover)
+     - miles-logo-cream.png    (cream wordmark on red — Red cover)
+
+   Brand rules enforced:
+   - Cover is wordmark-led, not title-led. The giant Miles wordmark
+     dominates the lower-left; the title is a modest top-left kicker.
+   - Three cover variants via class modifiers on <Title>:
+       (none)      → Light: cream bg, burgundy title, red wordmark
+       --red       → Red:   red bg, cream title, cream wordmark
+       --dark      → Dark:  burgundy bg, cream title, cream wordmark
+   - One accent per slide. Miles-rød is reserved for the focal element
+     (cover wordmark, BigStat numeral, Graph line, em-dash bullets).
+   - Burgundy Gelica for hero type; DM Sans for kickers, meta, body.
+*/
+
+/* ─── Cover (Title) — Light variant (default) ─────────────────────────
+   Geometry copied verbatim from "Title 1 (Light)" in Miles template
+   2026.pptx. Percentages match the official XML. Override the standard
+   .rp-slide flex layout — the cover uses absolute positioning. */
+
+.rp-title {
+  background: var(--paper, #fbf0e5);
+  color: var(--ink, #450d20);
+  /* Cancel default centred flex layout — cover slots are absolute. */
+  display: block;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Title text — modest, top-left, ≈25pt scaled to slide.
+   Title.tsx wraps bare children in <h1>, so this targets that element. */
+.rp-title h1 {
+  position: absolute;
+  left: 3%; top: 6.8%;
+  width: 52%; height: 22%;
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-size: clamp(1.8rem, 3.2vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: inherit;
+  margin: 0;
+}
+
+/* Subtitle — second line of the title block. Same colour, smaller. */
+.rp-title .rp-subtitle {
+  position: absolute;
+  left: 3%; top: calc(6.8% + 3.5rem);
+  width: 52%;
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-size: clamp(1.1rem, 1.9vw, 1.9rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.25;
+  color: inherit;
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* Meta — top-right, right-aligned, Miles-rød. Acts as location/date. */
+.rp-title .rp-meta {
+  position: absolute;
+  left: 63.8%; top: 6.6%;
+  width: 33.2%; height: 22%;
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: right;
+  color: var(--accent, #ff303b);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: block;
+  /* Use line breaks (<br>) to stack location over date. */
+  white-space: pre-line;
+}
+
+/* The wordmark — the cover's identity. Inserted as ::before so the
+   markup stays clean and the asset can swap per variant. Lower-left,
+   ~64% wide × ~35% tall; bottom-right ~33% stays empty by design. */
+.rp-title::before {
+  content: "";
+  position: absolute;
+  left: 3%; top: 58.8%;
+  width: 64.3%; height: 35.4%;
+  background: url(/theme/assets/miles-logo-red.png) no-repeat left center / contain;
+  pointer-events: none;
+}
+
+/* Red flood cover. */
+.rp-title.is-red {
+  background: var(--accent, #ff303b);
+  color: var(--paper, #fbf0e5);
+}
+.rp-title.is-red .rp-meta { color: var(--paper, #fbf0e5); }
+.rp-title.is-red::before {
+  background-image: url(/theme/assets/miles-logo-cream.png);
+}
+
+/* Burgundy flood cover. */
+.rp-title.is-dark {
+  background: var(--ink, #450d20);
+  color: var(--paper, #fbf0e5);
+}
+.rp-title.is-dark .rp-meta { color: var(--paper, #fbf0e5); }
+.rp-title.is-dark::before {
+  background-image: url(/theme/assets/miles-logo-cream.png);
+}
+
+/* Bleed: cover slides bleed their colour to the deck letterbox.
+   Mirrors the data-bleed pattern in deck.css. */
+.rp-title[data-bleed], .rp-title.is-red, .rp-title.is-dark { }
+.rp-title.is-red    { /* data-bleed="accent" should be set by component */ }
+.rp-title.is-dark   { /* data-bleed="ink" should be set by component */ }
+
+
+/* ─── Closing — mirrors Cover (burgundy flood is the default). ──────── */
+
+.rp-closing {
+  background: var(--ink, #450d20);
+  color: var(--paper, #fbf0e5);
+  position: relative;
+}
+.rp-closing .rp-subtitle {
+  color: var(--paper, #fbf0e5);
+  opacity: 0.7;
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+}
+/* Wordmark on closing — small, top-left, mirrors brand presence. */
+.rp-closing::before {
+  content: "";
+  position: absolute;
+  left: 5%; top: 6%;
+  width: 12%; height: 8%;
+  background: url(/theme/assets/miles-logo-cream.png) no-repeat left center / contain;
+  pointer-events: none;
+}
+
+
+/* ─── Section divider — burgundy Gelica, large + restrained. ────────── */
+
+.rp-section h1 {
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--ink, #450d20);
+  letter-spacing: -0.01em;
+}
+
+
+/* ─── Content-slide headings — Gelica burgundy with thin under-rule. ── */
+
+.rp-bullets h2, .rp-twocol h2, .rp-graph h2,
+.rp-compare h2, .rp-timeline h2 {
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-weight: 700;
+  color: var(--ink, #450d20);
+  border-bottom: 1px solid var(--rule, rgba(69,13,33,0.14));
+  padding-bottom: 1rem;
+}
+
+
+/* ─── Bullets — Miles-rød em-dash markers, DM Sans body. ────────────── */
+
+.rp-bullets ul {
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  list-style: none;
+  padding: 0;
+}
+.rp-bullets li {
+  padding-left: 1.5em; position: relative; margin: 0.8em 0;
+  color: var(--ink, #450d20);
+}
+.rp-bullets li::before {
+  content: "—";
+  position: absolute; left: 0;
+  color: var(--accent, #ff303b);
+  font-weight: 700;
+}
+
+/* Plain list used inside TwoColumn / Compare slots. */
+.rp-plain-list li::before { content: "—"; color: var(--accent, #ff303b); font-weight: 700; }
+
+
+/* ─── BigStat — Miles-rød Gelica numeral. ───────────────────────────── */
+
+.rp-bigstat-num {
+  color: var(--accent, #ff303b);
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-weight: 700;
+}
+
+
+/* ─── Compare — labelled rules above each pane. ─────────────────────── */
+
+.rp-compare-pane > header {
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  color: var(--mute, rgba(69,13,33,0.55));
+  border-bottom: 1px solid var(--rule, rgba(69,13,33,0.14));
+  padding-bottom: 0.5rem;
+}
+
+
+/* ─── Quote — display serif italic, oversized open-quote glyph. ─────── */
+
+.rp-quote blockquote {
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-style: italic;
+  color: var(--ink, #450d20);
+  position: relative;
+}
+.rp-quote blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -3rem; left: -0.5rem;
+  font-size: 6rem;
+  color: var(--accent, #ff303b);
+  opacity: 0.25;
+  line-height: 1;
+}
+.rp-quote cite {
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  color: var(--mute, rgba(69,13,33,0.55));
+}
+
+
+/* ─── Timeline — Miles-rød dots, DM Sans labels. ────────────────────── */
+
+.rp-timeline-dot { background: var(--accent, #ff303b); }
+.rp-timeline-at {
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  color: var(--mute, rgba(69,13,33,0.55));
+}
+.rp-timeline-label {
+  font-family: var(--font-display, "Gelica", Georgia, serif);
+  font-weight: 700;
+  color: var(--ink, #450d20);
+}
