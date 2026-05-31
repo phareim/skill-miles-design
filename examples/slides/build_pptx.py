@@ -25,6 +25,7 @@ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_AUTO_SIZE
 from pptx.oxml.ns import qn
+import tufte_pptx as tv  # native Tufte-styled chart builders
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.normpath(os.path.join(HERE, "..", "..", "assets"))
@@ -278,6 +279,100 @@ for i, (role, nm, rl) in enumerate(members):
     text(s, cx - Inches(0.4), Inches(4.8), d + Inches(0.8), Inches(0.4), [(nm, BURG, True)], size=15, font=BODY, align=PP_ALIGN.CENTER)
     text(s, cx - Inches(0.4), Inches(5.2), d + Inches(0.8), Inches(0.4), [(rl, RGBColor(0x6a,0x2f,0x44), False)], size=13, font=BODY, align=PP_ALIGN.CENTER)
 text(s, Inches(0), Inches(6.3), EMU_W, Inches(0.4), [("Bytt de runde brønnene mot svart-hvitt-portretter.", RGBColor(0x6a,0x2f,0x44), False)], size=13, font=BODY, align=PP_ALIGN.CENTER, italic=True)
+
+# ============================ DATA GRAPHICS ============================
+# Native, editable PowerPoint charts (Edit Data still works) styled Tufte-minimal
+# via tufte_pptx.style_chart. Illustrative data, mirroring charts.html.
+
+def chart_slide(kick, title):
+    s = slide()
+    chrome(s)
+    kicker(s, MX, MY + Inches(0.5), kick)
+    text(s, MX, MY + Inches(0.92), Inches(11), Inches(0.9), title, size=30, font=HEAD, bold=True)
+    return s
+
+def cap(s, t):
+    text(s, MX, Inches(6.7), Inches(11), Inches(0.4), [(t, tv.TINT2, False)], size=12, font=BODY, italic=True)
+
+CRECT = (MX, Inches(2.0), EMU_W - 2 * MX, Inches(4.5))
+
+# Divider
+s = slide(BURG); chrome(s, dark=True)
+rrect(s, Inches(2.6), Inches(2.7), Inches(8.1), Inches(2.1), fill=None, lineclr=KREM, radius=0.08)
+text(s, Inches(2.6), Inches(2.95), Inches(8.1), Inches(0.4), [("Kapittel 03", KREM, False)], size=14, align=PP_ALIGN.CENTER)
+text(s, Inches(2.6), Inches(3.45), Inches(8.1), Inches(1.2), [("Datagrafikk", KREM, False)], size=42, font=HEAD, bold=True, align=PP_ALIGN.CENTER)
+
+# Nøkkeltall — sparkline-ish mini line charts
+s = chart_slide("Nøkkeltall", "Siste 8 kvartaler")
+kpi = [("Kundetilfredshet", [4.2,4.3,4.4,4.4,4.5,4.6,4.6,4.7], "4,7 / 5"),
+       ("Ansatte totalt", [210,228,241,255,268,279,288,297], "297"),
+       ("Beleggsgrad", [88,90,86,91,93,89,92,94], "94 %"),
+       ("eNPS", [31,35,40,42,46,49,52,54], "54")]
+for i, (nm, series, val) in enumerate(kpi):
+    y = Inches(2.3 + i * 1.05)
+    text(s, MX, y + Inches(0.15), Inches(4), Inches(0.5), [(nm, BURG, False)], size=20, font=BODY)
+    tv.mini_line(s, (Inches(5.4), y, Inches(4.2), Inches(0.7)), series)
+    text(s, Inches(10.0), y + Inches(0.12), Inches(2.5), Inches(0.5), [(val, BURG, True)], size=22, font=BODY, align=PP_ALIGN.RIGHT)
+cap(s, "Sparklines som små native linjediagram. Illustrativ data.")
+
+# Bar — revenue per service area
+s = chart_slide("Sammenligning", "Omsetning per tjenesteområde")
+tv.bar(s, CRECT,
+       ["Transformasjon", "Brukeropplevelse", "Strategisk IT", "Data og AI", "Sky og plattform"],
+       [88, 97, 142, 188, 206], accent_idx=3, unit=" MNOK")
+cap(s, "Native stolpediagram fra null, verdien på stolpen, én rød aksent. Rediger data i PowerPoint. Illustrativ data.")
+
+# Line — employee growth
+s = chart_slide("Utvikling over tid", "Ansatte per tjenesteområde")
+lc = tv.line(s, CRECT, ["2019","2020","2021","2022","2023","2024","2025","2026"],
+             [("Data og AI", [18,26,38,55,74,96,121,148]),
+              ("Sky og plattform", [64,71,78,84,90,97,104,110]),
+              ("Strategisk IT", [41,44,46,48,49,51,52,54])],
+             accent_name="Data og AI")
+try:
+    lc.value_axis.minimum_scale = 0; lc.value_axis.major_unit = 50
+except Exception:
+    pass
+cap(s, "Native linjediagram, accent-serien i rødt, resten trukket tilbake. Illustrativ data.")
+
+# Clustered bar — consultants per office, before/after
+s = chart_slide("Rangering", "Konsulenter per kontor (2024 → 2025)")
+tv.clustered_bar(s, CRECT,
+                 ["Innlandet","Haugesund","Ålesund","Litauen","Stavanger","Trondheim","Bergen","Oslo"],
+                 [("2024", [6,9,11,14,31,30,54,112]), ("2025", [8,9,12,26,29,34,58,121])])
+cap(s, "To serier side om side (før/etter), minimal forklaring. Illustrativ data.")
+
+# Slopegraph — AI adoption (2-category line)
+s = chart_slide("Før og etter", "Andel prosjekter med AI-komponent (%)")
+tv.slope(s, (Inches(3.0), Inches(2.0), Inches(7.3), Inches(4.5)),
+         [("Data og AI", 62, 91), ("Sky og plattform", 28, 54), ("Strategisk IT", 12, 38),
+          ("Brukeropplevelse", 9, 31), ("Transformasjon", 5, 22)],
+         "2023", "2025", accent_name="Data og AI", value_fmt='0"%"')
+cap(s, "Skråningsgraf = 2-kategori linjediagram, én serie per område. Illustrativ data.")
+
+# Scatter
+s = chart_slide("Korrelasjon", "Varighet vs. teamstørrelse")
+tv.scatter(s, CRECT,
+           [(2,6),(3,7),(3,10),(4,9),(4,14),(5,12),(5,16),(6,13),(6,20),(7,18),(7,24),
+            (8,19),(8,28),(9,26),(10,31),(11,38),(12,34),(4,8),(9,22)],
+           highlight=(5, 11), x_label="Teamstørrelse", y_label="Varighet (uker)")
+cap(s, "Native XY-punktdiagram, uthevet referansepunkt i rødt. Illustrativ data.")
+
+# Small multiples — grid of mini line charts
+s = chart_slide("Mange serier", "Vekst per kontor 2021–2026")
+sm = [("Oslo",[98,104,109,112,117,121]),("Bergen",[44,47,50,54,56,58]),
+      ("Trondheim",[22,25,27,30,32,34]),("Stavanger",[27,28,30,31,30,29]),
+      ("Litauen",[4,7,10,14,20,26]),("Ålesund",[8,9,10,11,12,12]),
+      ("Haugesund",[6,7,8,9,9,9]),("Innlandet",[3,4,5,6,7,8])]
+PW, PH, GX, GY = Inches(2.7), Inches(1.45), Inches(0.25), Inches(0.55)
+x0, y0 = MX, Inches(2.3)
+for i, (nm, vals) in enumerate(sm):
+    col, row = i % 4, i // 4
+    px = Emu(int(x0) + col * (int(PW) + int(GX)))
+    py = Emu(int(y0) + row * (int(PH) + int(GY) + int(Inches(0.35))))
+    text(s, px, py, PW, Inches(0.3), [(nm, BURG, True)], size=13, font=BODY)
+    tv.mini_line(s, (px, Emu(int(py) + int(Inches(0.32))), PW, PH), vals, y_range=(0, 125))
+cap(s, "Small multiples: åtte native mini-linjediagram på felles skala (0–125). Illustrativ data.")
 
 # 12 · Closing red
 s = slide(ROD)

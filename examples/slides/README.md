@@ -7,8 +7,9 @@ from the bundled tokens, components, and assets. Two parallel forms:
 | File | What it is | Open with |
 |---|---|---|
 | `deck.html` | Self-contained HTML deck — 16:9 stage, arrow-key / click nav, dots + counter. The live, pixel-verified reference. | a browser (← → to navigate) |
-| `miles-templates.pptx` | The same templates in real PowerPoint — brand theme colours, **Manrope** headings + **DM Sans** body, embedded logos/illustrations/service icons. | PowerPoint / Keynote / Google Slides |
+| `miles-templates.pptx` | The same templates in real PowerPoint — brand theme colours, **Manrope** headings + **DM Sans** body, embedded logos/illustrations/service icons, **plus a data-graphics section of native, editable Tufte-styled charts**. | PowerPoint / Keynote / Google Slides |
 | `build_pptx.py` | Generator for the `.pptx` (so it stays reproducible/reviewable). | `pip install python-pptx && python build_pptx.py` |
+| `tufte_pptx.py` | The reusable chart layer: `style_chart()` + builders (bar, line, clustered, slopegraph, scatter, small-multiples, sparkline). | imported by `build_pptx.py` |
 | `charts.html` | **Data-graphics deck** — the seven Tufte chart types (from the `tufte-viz` skill) re-themed to the Miles palette. | a browser (← →) |
 | `build_charts.js` + `charts/` | Generator for `charts.html` + the vendored Tufte recipes. | `node build_charts.js` (no deps) |
 
@@ -23,6 +24,37 @@ team · tips + vision · closing (pill-nav).
 Cleveland dot plot · slopegraph · range-frame scatter · small multiples — the
 seven `tufte-viz` recipes, re-themed to Miles (burgundy ink, one Miles-red
 accent per figure). See `charts/NOTICE.md` for the token mapping.
+
+## Charts in the `.pptx` — native & editable, just better-looking
+
+The data-graphics slides in `miles-templates.pptx` are **real PowerPoint charts**,
+not pictures. "Edit Data" opens the embedded spreadsheet, you change the numbers,
+the chart re-renders — they behave like any chart in PowerPoint. They just look
+Tufte-minimal and Miles-on-brand.
+
+How: `tufte_pptx.style_chart(chart)` is a reusable pass you can call on **any**
+python-pptx chart. It erases the chartjunk (gridlines, chart/plot-area fill and
+borders, tick marks, extra axis lines), sets DM Sans labels in burgundy, prints
+values on the marks, and spends exactly one Miles-red accent via per-point/series
+fill — which is precisely Tufte's "one moment of attention" *and* the brand's
+single-red rule. The builders map each Tufte form onto a native chart type:
+
+| Tufte form | Native PowerPoint type |
+|---|---|
+| bar (one accent) | `BAR_CLUSTERED` (horizontal, one series, value labels) |
+| time-series line | `LINE` (accent series red, rest recede, minimal legend) |
+| before/after bars | `BAR_CLUSTERED` (two series) |
+| slopegraph | `LINE_MARKERS` with two categories, one series per item |
+| scatter | `XY_SCATTER` (highlight = a one-point red series) |
+| small multiples | a grid of tiny `LINE` charts on a shared scale |
+| sparkline | a tiny axis-less `LINE` with a red end-dot |
+
+**Honest trade-off:** two Tufte refinements can't survive a user data-edit in
+native PowerPoint — true *range-frames* (axis spanning only data min–max) and
+direct *line-end labels*. We trade those for editability and use a minimal,
+border-less legend only where multi-series naming is unavoidable. The fully
+Tufte-pure versions live in `charts.html` (rendered SVG); the `.pptx` versions
+are the editable ones. Verified by rendering the deck through LibreOffice.
 
 ## Notes
 
