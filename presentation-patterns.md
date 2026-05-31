@@ -204,7 +204,7 @@ Use these sparingly in author-facing template/docs surfaces — they are NOT for
 
 ## 15. The locked-page padlock badge
 
-Locked template pages display a **small circular padlock icon** centred above the slide (burgundy outline circle with a padlock glyph inside, red keyhole). This is a *navigation* signifier for slide-deck authors — leave it on locked slides and remove it from editable slides. The icon is `assets/icons/` if you need to recreate it.
+Locked template pages display a **small circular padlock icon** centred above the slide (burgundy outline circle with a padlock glyph inside, red keyhole). This is a *navigation* signifier for slide-deck authors — leave it on locked slides and remove it from editable slides. **This icon is not bundled** in `assets/icons/`; recreate it from this spec (a `.miles-service-circle`-style burgundy outline circle with a simple padlock glyph and a red keyhole dot), or lift it from the official `.pptx` master where it lives on the locked layouts (e.g. "Strategisk IT - LÅST").
 
 ---
 

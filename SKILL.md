@@ -14,7 +14,7 @@ You are implementing UI for **Miles**, a Norwegian/Lithuanian IT consultancy (~3
 2. **Copy `colors_and_type.css` into the host codebase** — or port its custom properties into the host's token system. It is the source of truth for colours (light + dark), type, scale, spacing, radii, shadows, and motion.
 3. **Use `components.css`** for ready-to-port recipes of the brand's signature components — the hand-drawn outlined frame, primary / inverse pill CTAs, phone mockup, speech bubble, TOC pill-card, service-area circle, "Tips & tricks" sticker. Translate them into the host's styling system as needed.
 4. **For slide decks, read `presentation-patterns.md`** — it captures the layout recipes from the official 2026 PowerPoint template (covers, chapter pages, service-area intros, team CVs, photo collages, closings).
-5. **Copy the fonts** in `fonts/` into the host repo (typically `public/fonts/`). Keep the `@font-face` paths in sync. Gelica is proprietary — bundle the files, never link a CDN. For PPTX exports, **Manrope** is the sanctioned heading fallback (Gelica's EULA forbids `.pptx` embedding); that is the combination shipped in the official 2026 template.
+5. **Copy the fonts** in `fonts/` into the host repo (typically `public/fonts/`). Keep the `@font-face` paths in sync. Gelica is proprietary — bundle the files, never link a CDN. For PPTX exports, **Manrope** is the sanctioned heading fallback (Gelica's EULA forbids `.pptx` embedding); that is the combination shipped in the official 2026 template. Manrope is **not bundled** here (it's OFL/open — fetch from Google Fonts when you need a `.pptx`; see `fonts/manrope/README.md`). On web, headings use the `--font-display` stack (Gelica → serif), which deliberately excludes Manrope.
 6. **Copy any brand assets you reference** from `assets/` into the host repo. Do not link to this skill folder at runtime.
 7. **Match the host codebase's framework + patterns.** React + Tailwind → port tokens into the Tailwind config. CSS Modules → import the stylesheet. Design-system package → express tokens there. **Never paste raw HTML prototypes** when a structured option exists.
 
@@ -26,6 +26,8 @@ If asked to design something with no other guidance, ask the user **what** they 
 |----------------------------|----------------------------------------------------------------------------------------|
 | `SKILL.md`                 | This file — entry point                                                                |
 | `BRAND.md`                 | Full brand system: content rules, colour, type, layout, animation, anti-patterns       |
+| `ASSETS.md`                | Catalog of every bundled icon, illustration, logo, service-icon — filename → meaning → use |
+| `examples/web/`            | Rendered reference page (`index.html`) — the tokens + components applied, light + dark  |
 | `colors_and_type.css`      | CSS custom properties + `@font-face` + semantic element styles. Light + dark mode.     |
 | `components.css`           | Ready-to-port recipes for Miles' signature components                                  |
 | `presentation-patterns.md` | Slide-deck layout patterns from the official 2026 PowerPoint template                  |
@@ -45,7 +47,7 @@ If asked to design something with no other guidance, ask the user **what** they 
 - **Emphasis:** a single red word inside a burgundy heading. Never bold inside Gelica; use colour.
 - **Pill CTAs** (300px radius) on web; **outlined pill nav** (30px). Cards max **12px** radius; photo cards may go to **16px**. Pill flavours: filled red, outlined burgundy, and inverse (cream on red) — see `components.css`.
 - **Hand-drawn outlined frame** is *the* card pattern for marketing/editorial — 1.5–2px solid burgundy stroke, no fill, no shadow. Used for brochure cards, mockup containers, document frames, slide-template tiles, phone mockups.
-- **No emoji chains, no gradients as backgrounds, no glassmorphism, no deep shadows** (>12px blur or >15% alpha), **no left-border-accent cards**, **no mint/lime/hot-pink/magenta/cyan-as-marketing-accent**.
+- **No emoji chains, no gradients as backgrounds, no glassmorphism, no deep shadows** (no black shadows, no coloured glows — keep alpha ≤15% and always burgundy-tinted; the soft hero shadow may blur wide but stays faint, ≤6% alpha), **no left-border-accent cards**, **no mint/lime/hot-pink/magenta/cyan-as-marketing-accent**.
 - **Teal `#004047` / `#78e8db` is sanctioned ONLY in technical/code contexts** (code blocks, the "Sky, teknologi og plattform" service slide, dev diagrams). Never as a marketing accent. Never alongside Miles-rød as a peer.
 - **Use the included illustrations** — don't invent or AI-generate replacements. The hand-drawn imperfection is the point.
 - **Easing:** `cubic-bezier(0.25, 1, 0.5, 1)` (ease-out-quart); 150–300ms; no bounce or spring.
@@ -55,12 +57,12 @@ If asked to design something with no other guidance, ask the user **what** they 
 
 ## Dark mode
 
-`colors_and_type.css` ships a dark-mode palette under `:root[data-theme="dark"]`. Brand red is nudged to `#ff4752` so it pops on near-black; surfaces move to a deep burgundy stack (`#1a0810` canvas, `#2a1019` raised); text uses warmed cream `#ead6c2`. The teal accent stays roughly the same — already dark-ready. Honour `prefers-color-scheme: dark` unless a parent forces a theme via `data-theme="light"`.
+`colors_and_type.css` ships a dark-mode palette under `:root[data-theme="dark"]`. Brand red is nudged to `#ff4752` so it pops on near-black; surfaces move to a deep burgundy stack (`#1a0810` canvas, `#2a1019` raised); text uses warmed cream `#ead6c2`. The teal accent stays roughly the same — already dark-ready. Dark mode is an **explicit opt-in**: set `data-theme="dark"` on `<html>`. On system-dark machines the CSS only matches `color-scheme` (so native controls theme correctly); to auto-follow the OS, have the host set the attribute from `prefers-color-scheme` (one-liner recipe in `colors_and_type.css`). Components route structural strokes/fills through semantic tokens (`--border-strong`, `--surface-strong`) so they don't invert wrongly in dark mode — never hard-code `var(--burgunder)` for a border or fill.
 
 ## Font fallbacks
 
 - **Web/print:** Gelica → Georgia / Times New Roman. DM Sans → Arial / Helvetica.
-- **PPTX exports:** Gelica → **Manrope** (Bold/SemiBold). This is the official 2026 template's choice; Gelica's licence forbids `.pptx` embedding. Manrope is NOT interchangeable with Gelica on web/print.
+- **PPTX exports:** Gelica → **Manrope** (Bold/SemiBold). This is the official 2026 template's choice; Gelica's licence forbids `.pptx` embedding. Manrope is NOT interchangeable with Gelica on web/print — it is a sans, Gelica is a serif. Not bundled (OFL; fetch from Google Fonts — see `fonts/manrope/`). In CSS, use the `--font-display-pptx` token only for PowerPoint-mirror surfaces; the default web `--font-display` excludes Manrope and falls back serif → serif.
 - **Google Fonts equivalents** (*Fraunces*, *Noto Serif* for Gelica): a compromise, not a match. Flag any substitution to the user.
 
 ## When in doubt

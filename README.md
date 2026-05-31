@@ -10,6 +10,8 @@ A Claude Code skill for designing UI in the **Miles** brand system. Miles is a N
 |---|---|
 | `SKILL.md` | Skill manifest + entry point. Loaded by Claude Code when the skill activates. |
 | `BRAND.md` | Full brand system reference — content rules, colour, type, layout, animation, anti-patterns. |
+| `ASSETS.md` | Catalog of every bundled icon / illustration / logo — filename → meaning → use. |
+| `examples/web/index.html` | Rendered reference page — tokens + components applied, light + dark. Open in a browser. |
 | `colors_and_type.css` | CSS custom properties + `@font-face` + semantic element styles. Light + dark mode. |
 | `components.css` | Ready-to-port recipes for the brand's signature components. |
 | `presentation-patterns.md` | Slide-deck patterns from the official 2026 PowerPoint master. |

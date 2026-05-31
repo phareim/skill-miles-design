@@ -81,7 +81,7 @@ The dominant ratio, in order, is cream → burgundy → Miles-rød.
 | Energy          | `--miles-rod` | `#ff303b` | Logo, kickers, single-word emphasis, CTAs, accent surfaces. ~10% of any composition.        |
 | Warm accent    | `--gul`       | `#ffd9a1` | Optimistic accent; can flood a full surface for playful/internal pieces (use sparingly).    |
 | Tech / knowledge | `--morkilla`  | `#3d1436` | "Dark purple" — knowledge-base, technical content, deep moods.                              |
-| Deeper red      | `--deep-red`  | `#b72318` | Print/duotone alternate red. Rare on screen — use only when `--miles-rod` is wrong context. |
+| Deeper red      | `--deep-red`  | `#b72318` | Print/duotone alternate red, and the PowerPoint theme's `accent1` + hyperlink colour. Rare on screen in web work — use only when `--miles-rod` is the wrong context. Note: in the `.pptx` theme `#ff303b` is `accent6`, so PowerPoint-generated objects may default to `#b72318`; recolour to Miles-rød for true brand-red moments. |
 
 **Tints** (5-step pink scale + 4-step dark-purple scale) are built into `colors_and_type.css` as `--miles-rod-tint-1..4`, `--burgunder-tint-1..4`, `--morkilla-tint-1..2`.
 
@@ -107,7 +107,7 @@ Activate with `data-theme="dark"` on `<html>`:
 - Text `--fg-1: #ead6c2` (warm cream).
 - Teal/dark-teal stay roughly the same — they already work on dark.
 
-Honour `prefers-color-scheme: dark` unless a parent forces `data-theme="light"`.
+Dark mode is an **explicit opt-in** via `data-theme="dark"` on `<html>`. On a system-dark machine with no attribute set, the CSS only matches `color-scheme` (so native controls theme); the brand palette stays light until the host opts in. To auto-follow the OS, set the attribute from `prefers-color-scheme` (recipe in `colors_and_type.css`). **Components must route structural strokes/fills through `--border-strong` / `--surface-strong`, not raw `var(--burgunder)`** — otherwise they invert to light pink in dark mode (since `--burgunder` becomes a foreground colour there).
 
 ### Typography
 - **Gelica** (serif, proprietary, Monotype) — display, headings, hero, ingress, quotes, callout numbers. Round and friendly.
@@ -192,12 +192,12 @@ A recurring motif — a hand-drawn outlined bubble (burgundy stroke, cream fill)
 - **Inputs:** 8px. **Small chips:** 8px. **Logo / image containers:** 0 or 4px.
 
 ### Shadows
-Restrained. Brand explicitly rejects deep shadows and glassmorphism. Three approved tiers:
+Restrained. Brand explicitly rejects deep, harsh, and glassmorphic shadows. The signal of a "deep" shadow here is **alpha and colour, not blur radius**: a wide-but-faint shadow is fine; a dense or black one is not. Three approved tiers:
 - `--shadow-1: 0 1px 2px rgba(69,13,33,0.08)` — hairline lift
 - `--shadow-2: 0 4px 12px rgba(69,13,33,0.09)` — card elevation
-- `--shadow-soft: 0 10px 30px rgba(69,13,33,0.06)` — hero / feature
+- `--shadow-soft: 0 10px 30px rgba(69,13,33,0.06)` — hero / feature (wide blur, but only 6% alpha, so it stays a whisper)
 
-Shadow colour is always burgundy-tinted, never black. **No inset shadows. No coloured glows.**
+Keep alpha ≤15% on any single shadow. Shadow colour is **always burgundy-tinted, never black** — this holds in dark mode too (use a burgundy-tinted near-black like `#0d0408`, never `#000`). **No inset shadows. No coloured glows.**
 
 ### Buttons & CTAs
 Three flavours, each tied to a specific moment:
@@ -225,6 +225,16 @@ The brand guide's table-of-contents page uses three large cream cards with thin 
 ### "Tips & tricks!" sticker
 In the PowerPoint template's documentation pages, instructional callouts appear as **a dashed-red 2px outlined rectangle**, with the words *"Tips & tricks!"* in Miles-rød Gelica italic cut into the top stroke (centered, with cream `background` so the dashes flow around the label). Body text inside is burgundy DM Sans. Use this for inline "how to use this template" / "behind-the-scenes" notes.
 
+### Accessibility — the red is a brand colour, not a body-text colour
+
+Burgundy on cream is the workhorse and is excellent: `#450d21` on `#fbf0e5` ≈ **14:1**. The accent red is where contrast gets tight, and this is inherent to the brand — design around it, don't fight it:
+
+- **Cream (or white) on Miles-rød ≈ 3.3:1.** That clears WCAG AA only for **large text** (≥24px, or ≥18.66px bold). So a red CTA is fine for a chunky pill label, but don't set small print cream-on-red. When you need AA-normal on red, use the **pressed red `#c81d26`** (cream-on-it ≈ 5.1:1) as the surface, or make the label large+bold.
+- **Red text on cream ≈ 3.3:1** (and only ~2.9:1 on `--krem-deep`). Kickers at `--scale-2`+ qualify as large text and pass; **inline red links and `.em-red` words inside body copy do not.** For body links, keep an underline as the affordance (don't rely on colour alone), or set link text in burgundy with a red underline.
+- **Dark mode is tighter still:** cream on the lightened red `#ff4752` ≈ 2.4:1. Keep on-red text large, or darken the red surface behind any small text.
+- **Single-red-word emphasis** inside a burgundy heading is a *display-size* device — at hero/heading sizes the 3.3:1 is acceptable (large-text threshold). Don't carry that emphasis pattern down into body-size text.
+- Focus rings (2px Miles-rød, 2px offset) are present on CTAs, nav pills, and links — keep them; they are the accessible keyboard affordance.
+
 ---
 
 ## 3. Iconography
@@ -232,9 +242,9 @@ In the PowerPoint template's documentation pages, instructional callouts appear 
 Three icon surfaces, each with a clear role. **Do not mix them.**
 
 ### 3.1 Hand-drawn SVG brand icons (`assets/icons/`)
-~30 icons, Norwegian-named (`alfakroll`, `bruker`, `hjerte-fylt`, `desktop-koding`, `feiring`, `fjell`, `robot`, etc.). **Style:** burgundy line-art with Miles-rød accents and a slightly-sketchy stroke. **Editorial / narrative** icons — section markers, about-us tiles, celebration moments. **Not UI affordances.**
+30 icons, Norwegian-named (`alfakroll`, `bruker`, `hjerte-fylt`, `desktop-koding`, `feiring`, `fjell`, `robot`, etc.). **Style:** burgundy line-art with Miles-rød accents and a slightly-sketchy stroke. **Editorial / narrative** icons — section markers, about-us tiles, celebration moments. **Not UI affordances.**
 
-Usage: inline at 32–96px. Don't recolour — the palette is baked in.
+**Full filename → meaning → use index for every icon and illustration is in [`ASSETS.md`](ASSETS.md).** Usage: inline at 32–96px. Don't recolour — the palette is baked in.
 
 ### 3.2 Service-area icons (`assets/service-icons/`)
 Five marks, each in regular and circle variants. The Norwegian names are canonical; English is for international contexts.
@@ -279,7 +289,7 @@ If your output contains any of these, you've drifted off-brand:
 
 - Cyan as a marketing accent, bluish-purple gradients
 - Glassmorphism, frosted blur backgrounds, noise textures
-- Deep drop shadows (>12px blur, >15% alpha), black shadows
+- Dense or black drop shadows (>15% alpha, or any `#000`-based shadow), coloured glows
 - Generic flat icons, emoji chains, stock illustrations, AI-generated faces
 - Rounded corners >16px on structural cards
 - Bold inside Gelica (use red colour for emphasis instead)

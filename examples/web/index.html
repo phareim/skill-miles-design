@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="no" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miles design system — referanse</title>
+<meta name="description" content="A rendered reference page for the Miles design system: tokens and signature components, applied. Light and dark.">
+
+<!-- The skill's source-of-truth stylesheets. @font-face paths inside
+     colors_and_type.css resolve relative to that file (repo root), so the
+     bundled Gelica + DM Sans load with no extra wiring. -->
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="../../components.css">
+
+<style>
+  /* ---- Page-only layout (not part of the system; just frames the demo) ---- */
+  body { margin: 0; }
+  .wrap { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+  section { padding-block: var(--space-9); }
+  .rule { border: 0; border-top: 1px solid var(--border-1); margin: 0; }
+  .stack { display: flex; flex-direction: column; gap: var(--space-4); }
+  .grid { display: grid; gap: var(--space-5); }
+  @media (min-width: 720px) { .cols-2 { grid-template-columns: 1fr 1fr; } .cols-3 { grid-template-columns: repeat(3,1fr); } }
+
+  /* Page chrome */
+  .chrome { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg-1) 88%, transparent); backdrop-filter: none; border-bottom: 1px solid var(--border-1); }
+  .chrome .miles-page-header { max-width: var(--container); margin-inline: auto; }
+  .logo { height: 24px; width: auto; }
+  .logo--cream { display: none; }
+  [data-theme="dark"] .logo--red { display: none; }
+  [data-theme="dark"] .logo--cream { display: inline; }
+
+  /* Hero */
+  .hero { display: grid; gap: var(--space-7); align-items: center; }
+  @media (min-width: 860px) { .hero { grid-template-columns: 1.1fr 0.9fr; } }
+  .hero h1 { font-size: clamp(var(--scale-5), 7vw, var(--scale-7)); line-height: 0.98; letter-spacing: -0.02em; }
+  .hero .ingress { max-width: 46ch; margin-top: var(--space-5); }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+  .blob { position: relative; display: grid; place-items: center; }
+  /* organic cream-deep background blob — never a gradient, never geometric */
+  .blob::before { content: ""; position: absolute; inset: 6% 0; background: var(--bg-3); border-radius: 46% 54% 58% 42% / 52% 46% 54% 48%; }
+  .blob img { position: relative; width: min(92%, 420px); height: auto; }
+
+  /* 60/30/10 colour band */
+  .ratio { display: grid; grid-template-columns: 6fr 3fr 1fr; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-1); min-height: 132px; }
+  .ratio > div { padding: var(--space-4); font-family: var(--font-body); font-size: var(--scale--1); display: flex; align-items: flex-end; }
+  .ratio .c-krem { background: var(--krem); color: var(--burgunder); }
+  .ratio .c-burg { background: var(--burgunder); color: var(--krem); }
+  .ratio .c-rod  { background: var(--miles-rod); color: var(--krem); }
+  [data-theme="dark"] .ratio .c-krem { background: var(--bg-2); color: var(--fg-1); }
+
+  .swatches { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+  .sw { display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--scale--1); color: var(--fg-2); font-family: var(--font-body); }
+  .sw i { width: 88px; height: 44px; border-radius: var(--radius-md); border: 1px solid var(--border-1); display: block; }
+
+  /* Type specimen */
+  .specimen > * + * { margin-top: var(--space-3); }
+  .specimen .label { font-family: var(--font-body); font-size: var(--scale--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); }
+
+  .eyebrow { font-family: var(--font-body); font-size: var(--scale--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); margin: 0 0 var(--space-2); }
+
+  .services { display: flex; flex-wrap: wrap; gap: var(--space-6); align-items: flex-start; }
+  .service { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 132px; text-align: center; font-family: var(--font-body); font-size: var(--scale--1); color: var(--fg-1); }
+  .service img { width: 84px; height: 84px; object-fit: contain; }
+
+  .bubbles { display: flex; align-items: flex-start; gap: var(--space-6); flex-wrap: wrap; }
+  .bubble-small { font-size: var(--scale--1); }
+
+  /* Closing */
+  .closing { background: var(--miles-rod); color: #fbf0e5; border-radius: var(--radius-lg); padding: clamp(var(--space-7), 6vw, var(--space-9)); margin-block: var(--space-9); }
+  .closing img.logo { height: 64px; margin-bottom: var(--space-6); }
+  .closing h2 { color: #fbf0e5; font-size: clamp(var(--scale-4), 5vw, var(--scale-6)); }
+  .closing .pills { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-7); }
+
+  /* Theme toggle */
+  .toggle { position: fixed; right: var(--space-5); bottom: var(--space-5); z-index: 40; }
+
+  /* Staggered, calm page-load reveal — fades + ≤12px lift, ease-out-quart. */
+  .reveal { opacity: 0; transform: translateY(12px); animation: rise var(--dur-slow) var(--ease-out-quart) forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .d1 { animation-delay: 60ms; } .d2 { animation-delay: 140ms; } .d3 { animation-delay: 220ms; } .d4 { animation-delay: 300ms; }
+  @media (prefers-reduced-motion: reduce) { .reveal { animation: none; opacity: 1; transform: none; } }
+
+  .note { font-family: var(--font-body); font-size: var(--scale--1); color: var(--fg-2); }
+  code.tok { background: var(--bg-3); color: var(--fg-1); padding: 0.1em 0.35em; border-radius: var(--radius-sm); }
+</style>
+</head>
+<body>
+
+<!-- ============ Page chrome: hamburger left · meta · wordmark right ============ -->
+<header class="chrome">
+  <div class="miles-page-header">
+    <div class="miles-page-header__menu" aria-label="Meny" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="miles-page-header__meta">
+      <span>Designsystem</span><span>Referanse · 2026</span>
+    </div>
+    <span>
+      <img class="logo logo--red"   src="../../assets/logos/miles-logo-red.png"   alt="Miles">
+      <img class="logo logo--cream" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+    </span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div>
+      <p class="kicker reveal d1">Faglig autoritet og varme</p>
+      <h1 class="reveal d2">Vi elsker å løse <span class="em-red">utfordringer</span>!</h1>
+      <p class="ingress reveal d3">Et verdidrevet konsulentselskap med lidenskap for teknologi og varme for hverandre. Denne siden viser designsystemet vårt i bruk — tokens og komponenter, lyst og mørkt.</p>
+      <div class="actions reveal d4">
+        <button class="miles-cta miles-cta--primary">Ta kontakt</button>
+        <button class="miles-cta miles-cta--outlined">Se tjenestene våre</button>
+      </div>
+    </div>
+    <div class="blob reveal d3">
+      <img src="../../assets/illustrations/people-hei.png" alt="Tre personer holder et skilt der det står «Hei!»">
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 60 / 30 / 10 ============ -->
+  <section>
+    <p class="eyebrow">Farge</p>
+    <h2>Krem, burgunder, rød — i den rekkefølgen</h2>
+    <p class="note" style="max-width:60ch">Hver flate starter som krem. Burgunder bærer struktur og tekst. Miles-rød er energien — omtrent ti prosent av et oppsett. Aldri svart, aldri ren hvit på krem.</p>
+    <div class="ratio" style="margin-top:var(--space-5)">
+      <div class="c-krem">60% · krem #fbf0e5</div>
+      <div class="c-burg">30% · burgunder #450d21</div>
+      <div class="c-rod">10%</div>
+    </div>
+    <div class="swatches">
+      <span class="sw"><i style="background:var(--gul)"></i>gul #ffd9a1</span>
+      <span class="sw"><i style="background:var(--morkilla)"></i>mørkilla #3d1436</span>
+      <span class="sw"><i style="background:var(--miles-rod-tint-3)"></i>rød-tint</span>
+      <span class="sw"><i style="background:var(--dark-teal)"></i>teal #004047 <em style="color:var(--fg-3)">— kun teknisk</em></span>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ Type ============ -->
+  <section class="specimen">
+    <p class="eyebrow">Typografi</p>
+    <p class="label">Gelica · display</p>
+    <p class="h-display" style="margin:0">Smart og varig</p>
+    <p class="label" style="margin-top:var(--space-5)">Gelica italic · ingress</p>
+    <p class="ingress" style="margin:0">Smarte, robuste og varige løsninger skapes i <span class="em-red">samarbeid</span> med andre.</p>
+    <p class="label" style="margin-top:var(--space-5)">DM Sans · brødtekst</p>
+    <p style="margin:0;max-width:62ch">DM Sans er en klar og minimalistisk skrift som balanserer Gelica. Den bærer tabeller, knapper, etiketter og lange avsnitt der serifen ville blitt for mye.</p>
+    <p class="quote" style="margin-top:var(--space-5)">«Hei, og takk for at du bryr deg!»</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ Signature components ============ -->
+  <section>
+    <p class="eyebrow">Komponenter</p>
+    <h2>Signaturmønstrene</h2>
+
+    <div class="grid cols-2" style="margin-top:var(--space-6)">
+
+      <!-- Hand-drawn brochure frame -->
+      <article class="miles-frame miles-frame--hand-drawn">
+        <div class="miles-frame__header"><span>Tjenesteområde</span><span>2026</span></div>
+        <h3>Data og <span class="em-red">AI</span></h3>
+        <p class="note" style="margin-top:var(--space-3)">Den håndtegnede rammen — 1,5px burgunder strek, ingen fyll, ingen skygge. Mønsteret for brosjyrer og redaksjonelle kort.</p>
+        <div class="miles-frame__footer"><span>Digital brosjyre</span>
+          <img class="logo logo--red" src="../../assets/logos/miles-logo-red.png" alt="Miles" style="height:16px">
+          <img class="logo logo--cream" src="../../assets/logos/miles-logo-cream.png" alt="Miles" style="height:16px">
+        </div>
+      </article>
+
+      <!-- Hand-drawn frame, alt wobble + a desk-scene illustration -->
+      <article class="miles-frame miles-frame--hand-drawn miles-frame--hand-drawn-alt" style="display:flex;flex-direction:column;gap:var(--space-4);align-items:center;text-align:center">
+        <img src="../../assets/illustrations/group-633755.png" alt="Person ved laptop: «Jeg forstår. Dette kan vi!»" style="width:min(80%,300px);height:auto">
+        <p class="note" style="margin:0">Bruk de medfølgende illustrasjonene. Den håndtegnede ufullkommenheten er hele poenget — ikke generer nye.</p>
+      </article>
+
+      <!-- Vision box -->
+      <div class="miles-vision">
+        <p class="eyebrow" style="margin-bottom:var(--space-2)">Visjon</p>
+        Vi møter mennesker med faglig autoritet og varme. 2px Miles-rød ramme rundt en kort, viktig påstand.
+      </div>
+
+      <!-- Tips sticker -->
+      <div class="miles-tips">
+        Dashed-rød boks med «Tips &amp; tricks!» skåret inn i toppstreken. For instruksjoner i maler og dokumentasjon — ikke på kundeslides.
+      </div>
+    </div>
+
+    <!-- Speech bubbles -->
+    <div class="bubbles" style="margin-top:var(--space-7)">
+      <div class="miles-bubble">Vi tar gjerne en lengre, litt for ivrig forklaring av akkurat hvordan vi skal løse dette for dere …</div>
+      <div class="miles-bubble bubble-small" style="margin-top:var(--space-6)">Err, okay?</div>
+    </div>
+
+    <!-- Service circles -->
+    <div class="services" style="margin-top:var(--space-8)">
+      <span class="service"><img src="../../assets/service-icons/cloud-circle.png" alt="">Teknologi, sky og plattform</span>
+      <span class="service"><img src="../../assets/service-icons/data-and-ai-circle.png" alt="">Data og AI</span>
+      <span class="service"><img src="../../assets/service-icons/strategic-it-circle.png" alt="">Strategisk IT</span>
+      <span class="service"><img src="../../assets/service-icons/transformation-and-people-circle.png" alt="">Transformasjon og mennesker</span>
+      <span class="service"><img src="../../assets/service-icons/ux-and-innovation-circle.png" alt="">Brukeropplevelse og innovasjon</span>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ TOC card + phone ============ -->
+  <section class="grid cols-2">
+    <div>
+      <p class="eyebrow">Navigasjon</p>
+      <h2 style="margin-bottom:var(--space-5)">Innholds&shy;oversikt</h2>
+      <div class="miles-toc-card">
+        <span class="miles-toc-card__title">Del 1: Bli kjent med Miles</span>
+        <div class="miles-toc-card__items">
+          <button class="miles-pill">Våre verdier</button>
+          <button class="miles-pill">Logobruk</button>
+          <button class="miles-pill">Farge og type</button>
+          <button class="miles-pill">Illustrasjoner</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">Digitalt</p>
+      <h2 style="margin-bottom:var(--space-5)">Telefon&shy;mockup</h2>
+      <div class="miles-phone">
+        <div class="miles-phone__screen stack">
+          <span class="kicker" style="margin:0;font-size:var(--scale-1)">Hei!</span>
+          <p class="note" style="margin:0">Den håndtegnede telefonrammen bærer SoMe- og produktinnhold i markedsslides.</p>
+          <span class="miles-pill miles-pill--filled" style="align-self:flex-start;margin-top:auto">Følg oss</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ Red split panel (full bleed) ============ -->
+<section class="miles-split">
+  <div class="red">
+    <p class="eyebrow" style="color:#fbf0e5">Mye er nytt</p>
+    <h2 style="color:#fbf0e5">Et nytt designsystem, samme varme</h2>
+    <p>Rød flate, krem tekst. Den ene halvdelen av sammenligningen.</p>
+  </div>
+  <div class="cream">
+    <p class="eyebrow">Mye består</p>
+    <h2>Faglig autoritet og varme</h2>
+    <p class="note">Krem flate, burgunder tekst. To toner, ett budskap — fast i begge temaer.</p>
+  </div>
+</section>
+
+<!-- ============ Closing ============ -->
+<div class="wrap">
+  <section class="closing">
+    <img class="logo logo--cream" src="../../assets/logos/miles-logo-cream.png" alt="Miles" style="display:inline">
+    <h2>Takk for tiden din! :)</h2>
+    <div class="pills">
+      <button class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Forside</button>
+      <button class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Innholdsoversikten</button>
+      <button class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Har du noe på hjertet?</button>
+    </div>
+  </section>
+
+  <p class="note" style="text-align:center;padding-bottom:var(--space-9)">
+    Denne siden er bygget kun på <code class="tok">colors_and_type.css</code> + <code class="tok">components.css</code> og de medfølgende fontene og bildene. Bytt tema nederst til høyre.
+  </p>
+</div>
+
+<button class="miles-cta miles-cta--outlined toggle" id="themeToggle" aria-pressed="false">Mørkt tema</button>
+
+<script>
+  // Theme toggle. Defaults to the OS preference (the auto-follow recipe from
+  // colors_and_type.css), then lets the visitor override.
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  const set = (mode) => {
+    root.dataset.theme = mode;
+    const dark = mode === 'dark';
+    btn.textContent = dark ? 'Lyst tema' : 'Mørkt tema';
+    btn.setAttribute('aria-pressed', String(dark));
+  };
+  set(mq.matches ? 'dark' : 'light');
+  btn.addEventListener('click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+</script>
+
+</body>
+</html>

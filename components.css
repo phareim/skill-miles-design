@@ -13,7 +13,7 @@
 
 .miles-frame {
   background: var(--bg-1);
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: none;
@@ -32,7 +32,12 @@
   transform: rotate(-0.4deg);
 }
 
-.miles-frame--hand-drawn:nth-of-type(even) {
+/* Alternate the wobble so adjacent frames don't look cloned. NOTE:
+   :nth-of-type counts element type among siblings, not matching class — it
+   only alternates reliably when the frames are homogeneous siblings. When
+   they aren't, add .miles-frame--hand-drawn-alt explicitly to every other one. */
+.miles-frame--hand-drawn:nth-of-type(even),
+.miles-frame--hand-drawn-alt {
   border-radius: 17px 15px 18px 14px;
   transform: rotate(0.5deg);
 }
@@ -92,22 +97,26 @@
 
 .miles-cta--outlined {
   background: transparent;
-  color: var(--burgunder);
-  border-color: var(--burgunder);
+  color: var(--fg-1);
+  border-color: var(--border-strong);
   border-radius: var(--radius-nav);
   padding: 0.6rem 1.25rem;
 }
 .miles-cta--outlined:hover {
-  background: var(--burgunder);
-  color: var(--krem);
+  background: var(--surface-strong);
+  color: var(--on-surface-strong);
+  border-color: var(--surface-strong);
 }
 
 .miles-cta--inverse {
-  /* Cream pill on a red surface — closing slides, red-flood CTAs */
-  background: var(--krem);
-  color: var(--burgunder);
+  /* Cream pill on a red surface — closing slides, red-flood CTAs. This pill
+     always sits ON Miles-rød (a fixed surface in both themes), so its colours
+     are pinned to the light-brand values rather than the page theme tokens —
+     otherwise dark mode would flip the label to pink-on-cream. */
+  background: #fbf0e5;
+  color: #450d21;
 }
-.miles-cta--inverse:hover { background: #f5e4d2; }
+.miles-cta--inverse:hover { background: #f3e3d0; }
 .miles-cta--inverse .miles-cta__arrow {
   /* The arrow inside an inverse pill is red */
   color: var(--miles-rod);
@@ -128,22 +137,32 @@
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--scale-0);
-  color: var(--burgunder);
+  color: var(--fg-1);
   background: transparent;
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-nav);
   padding: 0.5rem 1.1rem;
   cursor: pointer;
   transition: background-color var(--dur) var(--ease-out-quart),
-              color var(--dur) var(--ease-out-quart);
+              color var(--dur) var(--ease-out-quart),
+              border-color var(--dur) var(--ease-out-quart);
 }
-.miles-pill:hover { background: var(--burgunder); color: var(--krem); }
+.miles-pill:hover {
+  background: var(--surface-strong);
+  color: var(--on-surface-strong);
+  border-color: var(--surface-strong);
+}
+.miles-pill:focus-visible {
+  outline: 2px solid var(--miles-rod);
+  outline-offset: 2px;
+}
 
 .miles-pill--filled {
-  background: var(--burgunder);
-  color: var(--krem);
+  background: var(--surface-strong);
+  color: var(--on-surface-strong);
+  border-color: var(--surface-strong);
 }
-.miles-pill--filled:hover { background: var(--burgunder-hover); }
+.miles-pill--filled:hover { filter: brightness(0.92); }
 
 
 /* ---------- 4. TOC card (pill-card grouping) ----------
@@ -153,7 +172,7 @@
 
 .miles-toc-card {
   background: var(--bg-1);
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   display: flex;
@@ -164,8 +183,8 @@
 .miles-toc-card__title {
   /* The filled burgundy pill at the top of each TOC group */
   align-self: flex-start;
-  background: var(--burgunder);
-  color: var(--krem);
+  background: var(--surface-strong);
+  color: var(--on-surface-strong);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--scale-0);
@@ -189,7 +208,7 @@
   position: relative;
   width: 260px;
   aspect-ratio: 9 / 19;
-  border: 2px solid var(--burgunder);
+  border: 2px solid var(--border-strong);
   border-radius: 32px;
   background: var(--bg-1);
   padding: 36px 14px 22px;
@@ -207,11 +226,11 @@
   width: 60px;
   height: 6px;
   border-radius: 999px;
-  background: var(--burgunder);
+  background: var(--border-strong);
 }
 .miles-phone__screen {
   flex: 1;
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: 8px;
   padding: var(--space-4);
   display: flex;
@@ -228,7 +247,7 @@
   position: relative;
   display: inline-block;
   background: var(--bg-1);
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: 18px;
   padding: var(--space-4) var(--space-5);
   font-family: var(--font-display);
@@ -237,27 +256,29 @@
   max-width: 28ch;
   line-height: 1.25;
 }
+/* Stroke-only tail: an outer (stroke-coloured) triangle with an inner cream
+   triangle of the SAME aspect ratio inset uniformly by the stroke width, so a
+   ~1.5px outline remains. Outer 14:12 (ratio 1.167); inner keeps that ratio
+   (12:10.3) and is nudged up + right by the stroke so it sits fully inside. */
 .miles-bubble::after {
-  /* Bottom-left tail */
   content: "";
   position: absolute;
   bottom: -14px;
   left: 28px;
   width: 0;
   height: 0;
-  border-top: 14px solid var(--burgunder);
+  border-top: 14px solid var(--border-strong);
   border-right: 12px solid transparent;
 }
 .miles-bubble::before {
-  /* Mask the tail's interior with cream to fake a stroke-only triangle */
   content: "";
   position: absolute;
-  bottom: -10px;
-  left: 30px;
+  bottom: -11.5px;
+  left: 29.7px;
   width: 0;
   height: 0;
-  border-top: 11px solid var(--bg-1);
-  border-right: 9px solid transparent;
+  border-top: 12px solid var(--bg-1);
+  border-right: 10.3px solid transparent;
   z-index: 1;
 }
 
@@ -300,7 +321,7 @@
 .miles-service-circle {
   width: 96px;
   height: 96px;
-  border: 1.5px solid var(--burgunder);
+  border: 1.5px solid var(--border-strong);
   border-radius: 50%;
   background: var(--bg-1);
   display: inline-flex;
@@ -337,19 +358,23 @@
    burgundy text. The brand-guide's "A lot is new : A lot remains" pattern. */
 
 .miles-split {
+  /* A fixed two-tone brand composition (red half + cream half). It reads the
+     same in both themes, so both halves are pinned to light-brand values
+     rather than the page tokens — otherwise the cream half's text flips to
+     pink-on-cream in dark mode. */
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
 }
 .miles-split > .red {
-  background: var(--miles-rod);
-  color: var(--krem);
+  background: #ff303b;
+  color: #fbf0e5;
   padding: var(--space-8);
 }
-.miles-split > .red .em-red { color: var(--krem); }
+.miles-split > .red .em-red { color: #fbf0e5; }
 .miles-split > .cream {
-  background: var(--krem);
-  color: var(--burgunder);
+  background: #fbf0e5;
+  color: #450d21;
   padding: var(--space-8);
 }
 
@@ -426,7 +451,7 @@
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--burgunder);
+  background: var(--border-strong);
   border-radius: 2px;
 }
 .miles-page-header__meta {

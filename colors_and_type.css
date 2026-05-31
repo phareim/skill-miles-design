@@ -167,12 +167,24 @@
   --border-strong: var(--burgunder);
   --border-accent: var(--miles-rod);
 
+  /* ---- Structural strong surface ----
+     Filled "strong" elements (filled nav pill, TOC title pill, outlined-pill
+     hover fill, hand-drawn frame stroke). Routed through semantic tokens so
+     dark mode can re-point them — do NOT hard-code var(--burgunder) for these
+     in components, or they invert to light pink in dark mode. */
+  --surface-strong:    var(--burgunder);   /* fill of a "strong" element */
+  --on-surface-strong: var(--krem);        /* text/icon on --surface-strong */
+
   /* ---- Type families ----
-     Gelica is the brand serif. It is proprietary (Monotype/Adobe Fonts) and
-     cannot be embedded in .pptx files — for PowerPoint exports use Manrope
-     as the sanctioned fallback (the official Miles 2026 template ships with
-     Manrope for headings + DM Sans for body). */
-  --font-display: "Gelica", "Manrope", Georgia, "Times New Roman", serif;
+     Gelica is the brand serif. It is proprietary (Monotype/Adobe Fonts).
+     On WEB/PRINT it must fall back to a SERIF (Georgia / Times) — never to a
+     sans, because a sans display face is explicitly off-brand here.
+     Manrope is the PPTX-ONLY fallback: Gelica's EULA forbids .pptx embedding,
+     so the official Miles 2026 PowerPoint template uses Manrope (Bold/SemiBold)
+     for headings + DM Sans for body. Use --font-display-pptx in slide/HTML-deck
+     contexts that mirror the PowerPoint; never put Manrope in the web stack. */
+  --font-display:      "Gelica", Georgia, "Times New Roman", serif;
+  --font-display-pptx: "Manrope", "Gelica", Arial, sans-serif; /* PPTX-mirror only */
   --font-body:    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --font-mono:    ui-monospace, "JetBrains Mono", "DM Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
@@ -293,16 +305,33 @@
   --border-strong: var(--krem);
   --border-accent: var(--miles-rod);
 
-  /* Shadows — heavier on dark to still read */
+  /* Structural strong surface — a raised burgundy that still reads as "filled"
+     under cream text on the near-black canvas (cream-on-#5e2438 ≈ 7:1). */
+  --surface-strong:    #5e2438;
+  --on-surface-strong: var(--krem);
+
+  /* Shadows — burgundy-tinted near-black (never pure #000, per brand), lifted
+     in alpha so they still read on the dark canvas. */
   --shadow-0: none;
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.55);
-  --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+  --shadow-1: 0 1px 2px rgba(13, 4, 8, 0.55);
+  --shadow-2: 0 4px 12px rgba(13, 4, 8, 0.55);
+  --shadow-soft: 0 8px 24px rgba(13, 4, 8, 0.45);
 }
 
-/* Honour system preference unless a parent has already forced a theme */
+/* Dark mode is an EXPLICIT opt-in: the dark palette above activates only under
+   :root[data-theme="dark"]. On a system-dark machine with no attribute set we
+   only flip `color-scheme` so native controls (scrollbars, form widgets) match
+   — the brand palette stays light until a host sets data-theme="dark".
+   To auto-follow the OS, have the host set the attribute, e.g.:
+     <script>
+       const m = matchMedia('(prefers-color-scheme: dark)');
+       const apply = () => document.documentElement.dataset.theme = m.matches ? 'dark' : 'light';
+       apply(); m.addEventListener('change', apply);
+     </script>
+   (Keeping the palette out of the media query avoids a second, drift-prone copy
+   of every dark token.) */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
     color-scheme: dark;
   }
 }
@@ -401,6 +430,7 @@ p, .body {
 /* Links */
 a { color: var(--fg-accent); text-decoration: none; }
 a:hover { color: var(--miles-rod-hover); text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--miles-rod); outline-offset: 2px; border-radius: 2px; }
 
 /* Code (rarely used on brand — sans mono fallback) */
 code, kbd, pre, .mono {
