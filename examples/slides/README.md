@@ -9,6 +9,8 @@ from the bundled tokens, components, and assets. Two parallel forms:
 | `deck.html` | Self-contained HTML deck — 16:9 stage, arrow-key / click nav, dots + counter. The live, pixel-verified reference. | a browser (← → to navigate) |
 | `miles-templates.pptx` | The same templates in real PowerPoint — brand theme colours, **Manrope** headings + **DM Sans** body, embedded logos/illustrations/service icons. | PowerPoint / Keynote / Google Slides |
 | `build_pptx.py` | Generator for the `.pptx` (so it stays reproducible/reviewable). | `pip install python-pptx && python build_pptx.py` |
+| `charts.html` | **Data-graphics deck** — the seven Tufte chart types (from the `tufte-viz` skill) re-themed to the Miles palette. | a browser (← →) |
+| `build_charts.js` + `charts/` | Generator for `charts.html` + the vendored Tufte recipes. | `node build_charts.js` (no deps) |
 
 ## Templates included
 
@@ -16,6 +18,11 @@ Cover (cream / red / burgundy) · illustration cover · agenda (TOC cards) ·
 chapter divider · standard content (kicker → heading → body → illustration) ·
 service-area intro · all service areas · two-column editorial · red split panel ·
 team · tips + vision · closing (pill-nav).
+
+**Data graphics** (`charts.html`): KPI sparklines · time-series line · bar ·
+Cleveland dot plot · slopegraph · range-frame scatter · small multiples — the
+seven `tufte-viz` recipes, re-themed to Miles (burgundy ink, one Miles-red
+accent per figure). See `charts/NOTICE.md` for the token mapping.
 
 ## Notes
 

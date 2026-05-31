@@ -28,7 +28,7 @@ If asked to design something with no other guidance, ask the user **what** they 
 | `BRAND.md`                 | Full brand system: content rules, colour, type, layout, animation, anti-patterns       |
 | `ASSETS.md`                | Catalog of every bundled icon, illustration, logo, service-icon — filename → meaning → use |
 | `examples/web/`            | Rendered reference page (`index.html`) — the tokens + components applied, light + dark  |
-| `examples/slides/`         | Slide-template set — `deck.html` (HTML, 16:9, arrow-key nav) + `miles-templates.pptx` (+ its generator), one per pattern in `presentation-patterns.md` |
+| `examples/slides/`         | Slide-template set — `deck.html` (HTML, 16:9, arrow-key nav) + `miles-templates.pptx` (+ its generator), one per pattern in `presentation-patterns.md`; plus `charts.html`, the seven Tufte chart types re-themed to Miles |
 | `colors_and_type.css`      | CSS custom properties + `@font-face` + semantic element styles. Light + dark mode.     |
 | `components.css`           | Ready-to-port recipes for Miles' signature components                                  |
 | `presentation-patterns.md` | Slide-deck layout patterns from the official 2026 PowerPoint template                  |
@@ -55,6 +55,7 @@ If asked to design something with no other guidance, ask the user **what** they 
 - **Borders:** product UI uses `1px solid rgba(69,13,33,0.14)`; marketing uses the hand-drawn 1.5–2px burgundy frame. Shadow colour always burgundy-tinted, never black.
 - **Emoji rule (softened from "none"):** text smileys `:)` `:-)` and the heart mark are on-brand in friendly closings — **one per artefact, max**. Forbidden: emoji chains, decorative checkmarks/arrows-as-type, animal/food/skin-tone emoji. The brand guide itself uses `:)` and a single 😊 — that's the ceiling, not the floor.
 - **UI micro-icons not in the included set:** prefer the hand-drawn style; if substituting, use **Lucide** at 1.5–2px stroke recoloured to `var(--burgunder)` — and flag the substitution to the user.
+- **Data graphics:** use the `tufte-viz` skill's recipes re-themed to Miles — burgundy ink (never black), exactly **one Miles-red accent per figure** (Tufte's single moment of attention = the brand's single red), cream canvas, DM Sans labels. No pie/donut, no 3-D, no dual-axis, no chartjunk. Worked examples (sparkline, line, bar, dot plot, slopegraph, scatter, small multiples) are in `examples/slides/charts.html`; the token mapping is in `examples/slides/charts/NOTICE.md`.
 
 ## Dark mode
 
