@@ -4,6 +4,8 @@
 
 For colour and type tokens see `colors_and_type.css`. For component CSS (frames, pills, mockups) see `components.css`. For the writing voice see `BRAND.md` § 1.
 
+> **Buildable templates:** `examples/slides/` instantiates the patterns below as a ready-to-copy `deck.html` (16:9, arrow-key nav) and a real `miles-templates.pptx` (Manrope + DM Sans, embedded assets) — copy from those rather than building each slide from scratch.
+
 Aspect ratio everywhere: **16:9**. Margin grid: ~6.5% of slide width on left/right, ~6% top/bottom.
 
 ---

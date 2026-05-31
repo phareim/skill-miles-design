@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="no" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miles — slide-maler / slide templates</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="../../components.css">
+<style>
+  /* ====================================================================
+     Miles slide-template deck. A fixed 1280×720 (16:9) stage scaled to
+     fit the viewport; one slide shown at a time. Arrow keys / click / the
+     dots navigate. Every slide is a copy-from template for one pattern in
+     ../../presentation-patterns.md, built only from the bundled tokens,
+     components and assets. ==================================================================== */
+  :root { --slide-w: 1280px; --slide-h: 720px; --mx: 80px; --my: 52px; }
+  html, body { margin: 0; height: 100%; }
+  .viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; background: #160710; }
+  .stage { position: relative; width: var(--slide-w); height: var(--slide-h); transform-origin: center center; }
+
+  .slide { position: absolute; inset: 0; background: var(--krem); overflow: hidden; display: none; }
+  .slide.active { display: block; }
+  .slide.flood-red  { background: var(--miles-rod); color: #fbf0e5; }
+  .slide.flood-burg { background: var(--burgunder); color: #fbf0e5; }
+  .slide.flood-red h1, .slide.flood-red h2, .slide.flood-red h3,
+  .slide.flood-burg h1, .slide.flood-burg h2, .slide.flood-burg h3 { color: #fbf0e5; }
+
+  /* Content padding grid (~6.5% / 7%) */
+  .pad { position: absolute; inset: var(--my) var(--mx); display: flex; flex-direction: column; }
+
+  /* Per-slide chrome: hamburger top-left, wordmark top-right */
+  .chrome { position: absolute; top: 30px; left: var(--mx); right: var(--mx); display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+  .chrome .menu { display: flex; flex-direction: column; gap: 4px; }
+  .chrome .menu span { width: 26px; height: 2px; background: var(--burgunder); border-radius: 2px; }
+  .flood-red .chrome .menu span, .flood-burg .chrome .menu span { background: #fbf0e5; }
+  .chrome .wm { height: 22px; width: auto; }
+  .chrome .meta { font-family: var(--font-body); font-size: 13px; color: var(--fg-2); display: flex; gap: 28px; }
+  .flood-red .chrome .meta, .flood-burg .chrome .meta { color: #fbf0e5; }
+
+  /* Slide typographic helpers tuned to the 1280×720 stage */
+  .slide .kicker { font-size: 22px; }
+  .flood-red .kicker, .flood-burg .kicker { color: #fbf0e5; }
+  .s-title { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; line-height: 1.0; margin: 0; }
+  .wordmark-xl { width: 520px; max-width: 70%; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  .content-2col { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; height: 100%; }
+  .center { display: grid; place-items: center; text-align: center; height: 100%; }
+  .blob { position: relative; display: grid; place-items: center; }
+  .blob::before { content: ""; position: absolute; inset: -4% -2%; background: var(--krem-deep); border-radius: 46% 54% 58% 42% / 52% 46% 54% 48%; }
+  .blob img { position: relative; max-height: 460px; max-width: 100%; height: auto; }
+  .grow { flex: 1; }
+
+  /* Service-area circle list */
+  .svc-row { display: flex; justify-content: space-between; gap: 24px; width: 100%; }
+  .svc { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 180px; text-align: center; font-family: var(--font-body); font-size: 15px; color: var(--fg-1); }
+  .svc img { width: 120px; height: 120px; object-fit: contain; }
+
+  /* Team wells */
+  .team-row { display: flex; gap: 48px; justify-content: center; align-items: flex-start; }
+  .member { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 200px; text-align: center; }
+  .well { width: 150px; height: 150px; border-radius: 50%; background: var(--krem-deep); border: 1.5px solid var(--border-strong); display: grid; place-items: center; overflow: hidden; }
+  .well img { width: 64%; height: 64%; object-fit: contain; opacity: 0.85; }
+  .role-pill { background: var(--miles-rod); color: #fbf0e5; font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 5px 14px; border-radius: 300px; }
+  .member .nm { font-family: var(--font-body); font-weight: 600; color: var(--fg-1); }
+  .member .rl { font-family: var(--font-body); font-size: 14px; color: var(--fg-2); }
+
+  /* Split slide overrides the component's 100vh */
+  .slide .miles-split { min-height: 0; height: 100%; }
+
+  .disc { font-family: var(--font-body); font-size: 15px; color: var(--fg-2); letter-spacing: 0.01em; }
+
+  /* Navigation UI (not part of a slide) */
+  .nav { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; z-index: 50; }
+  .nav button { all: unset; cursor: pointer; width: 9px; height: 9px; border-radius: 50%; background: rgba(251,240,229,0.35); transition: background var(--dur) var(--ease-out-quart); }
+  .nav button.on { background: var(--miles-rod); }
+  .count { position: fixed; bottom: 16px; right: 20px; z-index: 50; font-family: var(--font-body); font-size: 12px; color: rgba(251,240,229,0.6); }
+  .hint { position: fixed; bottom: 16px; left: 20px; z-index: 50; font-family: var(--font-body); font-size: 12px; color: rgba(251,240,229,0.45); }
+</style>
+</head>
+<body>
+<div class="viewport">
+  <div class="stage" id="stage">
+
+    <!-- 1 · Cover, cream -->
+    <section class="slide active">
+      <div class="chrome">
+        <div class="meta"><span>Designsystem · referanse</span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="pad" style="justify-content:flex-end">
+        <div class="meta" style="font-family:var(--font-body);font-size:14px;color:var(--fg-accent);margin-bottom:20px">Oslo · 2026</div>
+        <img class="wordmark-xl" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+        <p class="ingress" style="margin-top:18px;max-width:36ch">Slide-maler i Miles' designsystem.</p>
+      </div>
+    </section>
+
+    <!-- 2 · Cover, red flood -->
+    <section class="slide flood-red">
+      <div class="chrome">
+        <div class="meta"><span>Forside · rød</span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+      </div>
+      <div class="pad" style="justify-content:flex-end">
+        <div style="font-family:var(--font-body);font-size:14px;color:#fbf0e5;margin-bottom:20px">Bergen · 2026</div>
+        <img class="wordmark-xl" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+      </div>
+    </section>
+
+    <!-- 3 · Cover, burgundy flood -->
+    <section class="slide flood-burg">
+      <div class="chrome">
+        <div class="meta"><span>Forside · burgunder</span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+      </div>
+      <div class="pad" style="justify-content:flex-end">
+        <div style="font-family:var(--font-body);font-size:14px;color:#fbf0e5;margin-bottom:20px">Trondheim · 2026</div>
+        <img class="wordmark-xl" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+      </div>
+    </section>
+
+    <!-- 4 · Cover, illustration -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="content-2col pad">
+        <div>
+          <h1 class="s-title" style="font-size:62px">Vi elsker å løse <span class="em-red">utfordringer</span>!</h1>
+          <p class="ingress" style="margin-top:24px;max-width:30ch">Et verdidrevet konsulentselskap med varme for hverandre.</p>
+        </div>
+        <div class="blob"><img src="../../assets/illustrations/catching-ideas-net.png" alt="Person fanger ideer med håv"></div>
+      </div>
+    </section>
+
+    <!-- 5 · Agenda / TOC -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="pad">
+        <p class="kicker">Innholdsoversikt</p>
+        <h2 class="s-title" style="font-size:40px;margin-bottom:34px">Hva vi skal innom</h2>
+        <div class="two-col" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="miles-toc-card">
+            <span class="miles-toc-card__title">Del 1: Bli kjent</span>
+            <div class="miles-toc-card__items">
+              <span class="miles-pill">Hvem vi er</span>
+              <span class="miles-pill">Våre verdier</span>
+            </div>
+          </div>
+          <div class="miles-toc-card">
+            <span class="miles-toc-card__title">Del 2: Tjenester</span>
+            <div class="miles-toc-card__items">
+              <span class="miles-pill">Data og AI</span>
+              <span class="miles-pill">Sky og plattform</span>
+            </div>
+          </div>
+          <div class="miles-toc-card">
+            <span class="miles-toc-card__title">Del 3: Samarbeid</span>
+            <div class="miles-toc-card__items">
+              <span class="miles-pill">Teamet</span>
+              <span class="miles-pill">Veien videre</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Chapter divider (red flood, title in hand-drawn cream frame) -->
+    <section class="slide flood-red">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-cream.png" alt="Miles">
+      </div>
+      <div class="center pad">
+        <div class="miles-frame miles-frame--hand-drawn" style="background:transparent;border-color:#fbf0e5;padding:40px 64px">
+          <span style="font-family:var(--font-body);font-size:14px;color:#fbf0e5;opacity:.85">Kapittel 02</span>
+          <h2 class="s-title" style="font-size:54px;margin-top:8px;color:#fbf0e5">Tjenesteområdene våre</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Standard content: kicker → heading → body → illustration -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="content-2col pad">
+        <div>
+          <p class="kicker">Slik jobber vi</p>
+          <h2 class="s-title" style="font-size:42px">Smarte løsninger i <span class="em-red">samarbeid</span></h2>
+          <p style="margin-top:20px;max-width:34ch;font-size:19px;line-height:1.55">Vi møter mennesker med faglig autoritet og varme. Vi lytter, forstår problemet, og bygger noe robust og varig sammen med dere.</p>
+        </div>
+        <div class="blob"><img src="../../assets/illustrations/person-laptop-orbit.png" alt="Konsulent omgitt av fagikoner"></div>
+      </div>
+    </section>
+
+    <!-- 8 · Service-area intro -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="content-2col pad">
+        <div>
+          <p class="kicker" style="font-style:normal;font-family:var(--font-body);font-size:13px;letter-spacing:.08em;text-transform:uppercase">Tjenesteområde</p>
+          <h2 class="s-title" style="font-size:50px">Data og AI</h2>
+          <p class="disc" style="margin-top:auto;position:absolute;bottom:var(--my);max-width:60ch">Maskinlæring, dataplattformer, MLOps, generativ AI, beslutningsstøtte, datakvalitet, analyse.</p>
+        </div>
+        <div class="center"><img src="../../assets/service-icons/data-and-ai-circle.png" alt="" style="width:300px;height:300px;object-fit:contain"></div>
+      </div>
+    </section>
+
+    <!-- 9 · All service areas -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="pad" style="justify-content:center">
+        <p class="kicker" style="text-align:center">Våre tjenesteområder</p>
+        <div class="svc-row" style="margin-top:28px">
+          <span class="svc"><img src="../../assets/service-icons/strategic-it-circle.png" alt="">Strategisk IT</span>
+          <span class="svc"><img src="../../assets/service-icons/cloud-circle.png" alt="">Teknologi, sky og plattform</span>
+          <span class="svc"><img src="../../assets/service-icons/data-and-ai-circle.png" alt="">Data og AI</span>
+          <span class="svc"><img src="../../assets/service-icons/ux-and-innovation-circle.png" alt="">Brukeropplevelse og innovasjon</span>
+          <span class="svc"><img src="../../assets/service-icons/transformation-and-people-circle.png" alt="">Transformasjon og mennesker</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · Two-column editorial -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="pad">
+        <p class="kicker">Om oss</p>
+        <h2 class="s-title" style="font-size:40px;margin-bottom:28px">Hei, og takk for at du <span class="em-red">bryr</span> deg</h2>
+        <div class="two-col" style="font-size:18px;line-height:1.55">
+          <p style="margin:0">Vi er snart 300 mennesker i Oslo, Bergen, Trondheim, Stavanger, Ålesund, Haugesund, Innlandet og Litauen. Vi er verdidrevne, nysgjerrige og opptatt av faget.</p>
+          <p style="margin:0">Vi tror smarte, robuste og varige løsninger skapes i samarbeid — med varme for hverandre og respekt for at folk er forskjellige.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · Red split panel -->
+    <section class="slide">
+      <div class="miles-split">
+        <div class="red" style="padding:var(--my) var(--mx)">
+          <p class="kicker" style="color:#fbf0e5">Mye er nytt</p>
+          <h2 class="s-title" style="font-size:36px;color:#fbf0e5">En ny verktøykasse</h2>
+          <p style="margin-top:14px;color:#fbf0e5;font-size:18px">Nye plattformer, ny AI, nye muligheter.</p>
+        </div>
+        <div class="cream" style="padding:var(--my) var(--mx)">
+          <p class="kicker">Mye består</p>
+          <h2 class="s-title" style="font-size:36px">Faglig autoritet og varme</h2>
+          <p style="margin-top:14px;font-size:18px">Verdiene og menneskene er de samme.</p>
+        </div>
+      </div>
+      <img class="wm" src="../../assets/logos/miles-logo-cream.png" alt="Miles" style="position:absolute;top:30px;left:30px;height:20px">
+    </section>
+
+    <!-- 12 · Team -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="pad" style="justify-content:center">
+        <p class="kicker" style="text-align:center;margin-bottom:30px">Teamet ditt</p>
+        <div class="team-row">
+          <div class="member">
+            <div class="well"><img src="../../assets/icons/bruker.svg" alt=""></div>
+            <span class="role-pill">Senior konsulent</span>
+            <span class="nm">Navn Navnesen</span>
+            <span class="rl">Løsningsarkitekt</span>
+          </div>
+          <div class="member">
+            <div class="well"><img src="../../assets/icons/bruker.svg" alt=""></div>
+            <span class="role-pill">Konsulent</span>
+            <span class="nm">Navn Navnesen</span>
+            <span class="rl">Data scientist</span>
+          </div>
+          <div class="member">
+            <div class="well"><img src="../../assets/icons/bruker.svg" alt=""></div>
+            <span class="role-pill">Senior konsulent</span>
+            <span class="nm">Navn Navnesen</span>
+            <span class="rl">UX-designer</span>
+          </div>
+        </div>
+        <p class="disc" style="text-align:center;margin-top:26px">Bytt de runde brønnene mot svart-hvitt-portretter (radius 50%).</p>
+      </div>
+    </section>
+
+    <!-- 13 · Author note: tips & vision -->
+    <section class="slide">
+      <div class="chrome">
+        <div class="menu"><span></span><span></span><span></span></div>
+        <img class="wm" src="../../assets/logos/miles-logo-red.png" alt="Miles">
+      </div>
+      <div class="content-2col pad">
+        <div class="miles-vision">
+          <p class="kicker" style="margin-bottom:10px">Visjon</p>
+          Vi skaper teknologi som faktisk gjør hverdagen bedre for folk.
+        </div>
+        <div class="miles-tips">
+          Bruk «Tips &amp; tricks!»-boksen til instruksjoner i maler — ikke på kundeslides. Hold det til én rød aksent og setningsnavn (sentence case).
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · Closing -->
+    <section class="slide flood-red">
+      <div class="pad">
+        <img class="wm" src="../../assets/logos/miles-logo-cream.png" alt="Miles" style="height:54px;align-self:flex-start">
+        <div class="grow"></div>
+        <h2 class="s-title" style="font-size:58px;color:#fbf0e5">Takk for tiden din! :)</h2>
+        <div style="display:flex;gap:14px;margin-top:34px;flex-wrap:wrap">
+          <span class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Forside</span>
+          <span class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Innholdsoversikten</span>
+          <span class="miles-cta miles-cta--inverse"><span class="miles-cta__arrow">←</span> Har du noe på hjertet?</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="nav" id="nav"></div>
+<div class="count" id="count"></div>
+<div class="hint">← →  ·  klikk</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const stage = document.getElementById('stage');
+  const nav = document.getElementById('nav');
+  const count = document.getElementById('count');
+  let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1));
+
+  slides.forEach((_, n) => {
+    const b = document.createElement('button');
+    b.addEventListener('click', () => go(n));
+    nav.appendChild(b);
+  });
+  const dots = [...nav.children];
+
+  function fit() {
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    stage.style.transform = `scale(${s})`;
+  }
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('on', k === i));
+    count.textContent = `${i + 1} / ${slides.length}`;
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { go(i + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(i - 1); e.preventDefault(); }
+  });
+  addEventListener('click', e => { if (!e.target.closest('.nav')) go(i + (e.clientX > innerWidth / 2 ? 1 : -1)); });
+  addEventListener('resize', fit);
+  fit(); go(i);
+</script>
+</body>
+</html>
